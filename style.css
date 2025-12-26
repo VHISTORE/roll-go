@@ -125,10 +125,8 @@ button.add-to-cart:hover { background: #000; }
 }
 
 .floating-cart svg {
-    width: 28px;
-    height: 28px;
-    stroke: white; 
-    stroke-width: 2;
+    width: 28px; height: 28px;
+    stroke: white; stroke-width: 2;
 }
 
 .floating-cart.empty { opacity: 0.3; transform: scale(0.85); pointer-events: none; }
@@ -147,17 +145,19 @@ button.add-to-cart:hover { background: #000; }
 /* --- ФУТЕР --- */
 .main-footer { 
     background-color: var(--white); 
-    padding: 50px 0 30px; 
+    padding: 60px 0 0; 
     border-top: 1px solid rgba(0,0,0,0.05); 
+    margin-top: 50px;
 }
 
 .footer-content { 
     display: grid; 
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
     gap: 40px; 
+    margin-bottom: 50px;
 }
 
-.footer-contacts h4 { margin-bottom: 20px; }
+.footer-contacts h4, .footer-hours h4 { margin-bottom: 20px; }
 
 .footer-link {
     display: flex; 
@@ -171,11 +171,26 @@ button.add-to-cart:hover { background: #000; }
 
 .footer-link:hover { color: var(--primary-color) !important; }
 
-/* Псевдо-иконки для контактов */
 .footer-link.mail::before { content: "✉"; margin-right: 10px; font-size: 1.2rem; }
 .footer-link.phone::before { content: "📞"; margin-right: 10px; font-size: 1.1rem; }
 
 .footer-hours p { margin: 5px 0; font-size: 0.95rem; }
+.closed-status { color: var(--primary-color); font-weight: bold; }
+
+/* НИЖНЯЯ ПОЛОСА */
+.footer-bottom {
+    background: #f8f9fa;
+    padding: 25px 0;
+    text-align: center;
+    border-top: 1px solid #eee;
+}
+
+.footer-bottom p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #a4b0be;
+    letter-spacing: 0.5px;
+}
 
 /* --- МОДАЛКА КОРЗИНЫ --- */
 .cart-modal {
