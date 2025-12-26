@@ -1,44 +1,62 @@
-let count = 0;
-const cart = [];
-const countElement = document.getElementById('cart-count');
+let cart = [];
+const cartCountElement = document.getElementById('cart-count');
 const cartButton = document.getElementById('cart-button');
 const cartModal = document.getElementById('cart-modal');
 const closeCart = document.getElementById('close-cart');
+const cartItemsContainer = document.getElementById('cart-items-container');
+const cartTotalPriceElement = document.getElementById('cart-total-price');
 
 // Добавление в корзину
 document.querySelectorAll('.add-to-cart').forEach(button => {
     button.addEventListener('click', () => {
-        count++;
-        countElement.innerText = count;
-        cartButton.classList.remove('empty');
+        const name = button.getAttribute('data-name');
+        const price = parseFloat(button.getAttribute('data-price'));
+        
+        cart.push({ name, price });
+        updateCart();
 
         // Эффект кнопки
-        const originalText = button.innerText;
         button.innerText = 'Added!';
         button.style.backgroundColor = '#27ae60';
         cartButton.style.transform = 'scale(1.1)';
         
         setTimeout(() => {
-            button.innerText = originalText;
+            button.innerText = 'Add';
             button.style.backgroundColor = '';
             cartButton.style.transform = 'scale(1)';
         }, 400);
     });
 });
 
-// Открыть корзину
-cartButton.addEventListener('click', () => {
-    if (count > 0) {
-        cartModal.style.display = 'block';
+function updateCart() {
+    const totalItems = cart.length;
+    cartCountElement.innerText = totalItems;
+    
+    if (totalItems > 0) {
+        cartButton.classList.remove('empty');
     }
+
+    // Рендер товаров в модалке
+    cartItemsContainer.innerHTML = cart.map((item, index) => `
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+            <span>${item.name}</span>
+            <b>£${item.price.toFixed(2)}</b>
+        </div>
+    `).join('');
+
+    // Расчет суммы
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    cartTotalPriceElement.innerText = `£${total.toFixed(2)}`;
+}
+
+cartButton.addEventListener('click', () => {
+    cartModal.style.display = 'block';
 });
 
-// Закрыть корзину
 closeCart.addEventListener('click', () => {
     cartModal.style.display = 'none';
 });
 
-// Закрытие по клику вне окна
-window.addEventListener('click', (e) => {
-    if (e.target === cartModal) cartModal.style.display = 'none';
-});
+window.onclick = (event) => {
+    if (event.target == cartModal) cartModal.style.display = 'none';
+}
