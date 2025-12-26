@@ -6,6 +6,7 @@ const closeCart = document.getElementById('close-cart');
 const cartItemsContainer = document.getElementById('cart-items-container');
 const cartTotalPriceElement = document.getElementById('cart-total-price');
 
+// Добавление в корзину
 document.querySelectorAll('.add-to-cart').forEach(button => {
     button.addEventListener('click', () => {
         const name = button.getAttribute('data-name');
