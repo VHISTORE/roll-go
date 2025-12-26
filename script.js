@@ -7,18 +7,23 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
         count++;
         countElement.innerText = count;
 
-        // Button effect
+        // 1. Убираем прозрачность корзины при первом добавлении
+        if (count > 0) {
+            cartButton.classList.remove('empty');
+        }
+
+        // 2. Эффект на кнопке "Add"
         const originalText = button.innerText;
         button.innerText = 'Added!';
         button.style.backgroundColor = '#27ae60';
         
-        // Cart "Pop" animation
+        // 3. Эффект прыжка
         cartButton.style.transform = 'scale(1.2)';
         
         setTimeout(() => {
             button.innerText = originalText;
             button.style.backgroundColor = '';
-            cartButton.style.transform = '';
+            cartButton.style.transform = 'scale(1)';
         }, 400);
     });
 });
