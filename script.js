@@ -1,19 +1,13 @@
 let count = 0;
-const countElement = document.getElementById('cart-count');
-const addButtons = document.querySelectorAll('.add-to-cart');
+const countDisplay = document.getElementById('cart-count');
 
-addButtons.forEach(button => {
-    button.addEventListener('click', () => {
+document.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
         count++;
-        countElement.innerText = count;
-
-        const originalText = button.innerText;
-        button.innerText = 'Added!';
-        button.style.backgroundColor = '#2ed573';
+        countDisplay.innerText = count;
         
-        setTimeout(() => {
-            button.innerText = originalText;
-            button.style.backgroundColor = '';
-        }, 700);
+        // Маленький эффект клика
+        btn.style.transform = 'scale(0.9)';
+        setTimeout(() => btn.style.transform = 'scale(1)', 100);
     });
 });
