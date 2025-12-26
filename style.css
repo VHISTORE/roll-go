@@ -4,6 +4,7 @@
     --text-muted: #808e9b;
     --bg-color: #f5f6fa;
     --green-accent: #27ae60;
+    --card-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
 body {
@@ -11,6 +12,7 @@ body {
     margin: 0;
     background-color: var(--bg-color);
     padding-bottom: 80px;
+    color: var(--dark-color);
 }
 
 .container {
@@ -19,10 +21,11 @@ body {
     padding: 0 20px;
 }
 
+/* --- HEADER --- */
 header {
     background: #fff;
     padding: 15px 0;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -44,108 +47,176 @@ nav {
 
 .logo-img { height: 50px; }
 
-/* Новый стиль для названия */
 .logo-text { 
     font-family: 'Montserrat', sans-serif;
     font-size: 1.8rem; 
     font-weight: 900; 
     text-transform: uppercase; 
-    letter-spacing: -1px; /* Сжимаем буквы для эффекта "мощи" */
-    color: var(--dark-color);
+    letter-spacing: -1px;
 }
 
+/* --- MENU GRID --- */
 .menu-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
-    padding-top: 30px;
+    gap: 30px;
+    padding-top: 40px;
 }
 
+/* --- PRODUCT CARD --- */
 .product-card {
     background: #fff;
-    border-radius: 16px;
+    border-radius: 24px; /* Более мягкие углы */
     overflow: hidden;
     position: relative;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    box-shadow: var(--card-shadow);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(0,0,0,0.02);
 }
 
-.product-card img { width: 100%; height: 200px; object-fit: cover; }
-.card-info { padding: 15px; }
-.card-info h3 { margin: 0; font-size: 1.15rem; }
-.card-info p { margin: 8px 0; color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; }
-.bonus-info { font-size: 0.7rem; color: var(--green-accent); font-weight: 700; text-transform: uppercase; }
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
 
+/* Badge Style */
+.badge.hot {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: var(--primary-color);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(232, 65, 24, 0.3);
+}
+
+/* Image zoom effect */
+.product-card img { 
+    width: 100%; 
+    height: 220px; 
+    object-fit: cover; 
+    transition: transform 0.6s ease;
+}
+
+.product-card:hover img {
+    transform: scale(1.1);
+}
+
+/* Info Section */
+.card-info { padding: 20px; }
+
+.card-info h3 { 
+    margin: 0; 
+    font-size: 1.3rem; 
+    font-weight: 700;
+}
+
+.card-info p { 
+    margin: 10px 0; 
+    color: var(--text-muted); 
+    font-size: 0.9rem; 
+    line-height: 1.5;
+    height: 45px;
+    overflow: hidden;
+}
+
+.bonus-info { 
+    display: inline-block;
+    font-size: 0.65rem; 
+    color: var(--green-accent); 
+    font-weight: 700; 
+    text-transform: uppercase;
+    background: rgba(39, 174, 96, 0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+/* Footer & Price */
 .card-footer {
-    padding: 15px;
+    padding: 0 20px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid #f8f8f8;
 }
 
-.price { font-size: 1.3rem; font-weight: 800; }
+.price { 
+    font-size: 1.5rem; 
+    font-weight: 900; 
+    letter-spacing: -0.5px;
+}
 
-button {
+/* Button Styling */
+button.add-to-cart {
     background: var(--dark-color);
     color: white;
     border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
+    padding: 12px 24px;
+    border-radius: 14px;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 700;
+    transition: all 0.3s ease;
 }
 
-/* Настройки корзины */
+button.add-to-cart:hover {
+    background: #000;
+    transform: scale(1.05);
+}
+
+button.add-to-cart:active {
+    transform: scale(0.95);
+}
+
+/* --- FLOATING CART --- */
 .floating-cart {
     position: fixed;
-    bottom: 25px;
-    right: 25px;
+    bottom: 30px;
+    right: 30px;
     background-color: var(--dark-color);
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    border-radius: 22px; /* Apple-style rounded corners */
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     cursor: pointer;
     z-index: 2000;
-    transition: all 0.4s ease; /* Плавное проявление */
+    transition: all 0.4s ease;
 }
 
-/* Когда корзина пустая */
 .floating-cart.empty {
-    opacity: 0.3;
-    transform: scale(0.9);
+    opacity: 0.4;
+    transform: scale(0.8);
+    pointer-events: none; /* Нельзя нажать, если пустая */
 }
 
 .cart-icon {
     position: relative;
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
 }
 
 #cart-count {
     position: absolute;
-    top: -10px;
-    right: -10px;
+    top: -12px;
+    right: -12px;
     background: var(--primary-color);
     color: white;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 900;
-    min-width: 18px;
-    height: 18px;
-    border-radius: 10px;
-    display: flex;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: none; 
     justify-content: center;
     align-items: center;
-    padding: 0 4px;
-    border: 2px solid var(--dark-color);
-    /* Прячем счетчик, если он 0 */
-    display: none; 
+    border: 3px solid var(--dark-color);
 }
 
-/* Показываем счетчик, когда в корзине что-то есть */
 .floating-cart:not(.empty) #cart-count {
     display: flex;
 }
