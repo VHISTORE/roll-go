@@ -8,7 +8,7 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
 
         const originalText = button.innerText;
         button.innerText = 'Added!';
-        button.style.backgroundColor = '#2ed573';
+        button.style.backgroundColor = '#27ae60';
         
         setTimeout(() => {
             button.innerText = originalText;
