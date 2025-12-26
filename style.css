@@ -21,7 +21,7 @@ body {
 
 header {
     background: #fff;
-    padding: 10px 0;
+    padding: 15px 0;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     position: sticky;
     top: 0;
@@ -37,13 +37,22 @@ nav {
 .logo-wrapper {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
     text-decoration: none;
     color: var(--dark-color);
 }
 
-.logo-img { height: 45px; }
-.logo-text { font-size: 1.4rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+.logo-img { height: 50px; }
+
+/* Новый стиль для названия */
+.logo-text { 
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8rem; 
+    font-weight: 900; 
+    text-transform: uppercase; 
+    letter-spacing: -1px; /* Сжимаем буквы для эффекта "мощи" */
+    color: var(--dark-color);
+}
 
 .menu-grid {
     display: grid;
@@ -58,34 +67,13 @@ nav {
     overflow: hidden;
     position: relative;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    display: flex;
-    flex-direction: column;
-}
-
-.badge {
-    position: absolute;
-    top: 15px; left: 15px;
-    background: #ff4757;
-    color: white;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: bold;
-    z-index: 10;
 }
 
 .product-card img { width: 100%; height: 200px; object-fit: cover; }
-.card-info { padding: 15px; flex-grow: 1; }
+.card-info { padding: 15px; }
 .card-info h3 { margin: 0; font-size: 1.15rem; }
 .card-info p { margin: 8px 0; color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; }
-
-.bonus-info { 
-    font-size: 0.7rem; 
-    color: var(--green-accent); 
-    font-weight: 700; 
-    text-transform: uppercase; 
-    letter-spacing: 0.5px;
-}
+.bonus-info { font-size: 0.7rem; color: var(--green-accent); font-weight: 700; text-transform: uppercase; }
 
 .card-footer {
     padding: 15px;
@@ -105,12 +93,9 @@ button {
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
-    transition: 0.2s;
 }
 
-button:hover { background: var(--primary-color); }
-
-/* Compact Floating Cart */
+/* Настройки корзины */
 .floating-cart {
     position: fixed;
     bottom: 25px;
@@ -125,7 +110,13 @@ button:hover { background: var(--primary-color); }
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     cursor: pointer;
     z-index: 2000;
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.4s ease; /* Плавное проявление */
+}
+
+/* Когда корзина пустая */
+.floating-cart.empty {
+    opacity: 0.3;
+    transform: scale(0.9);
 }
 
 .cart-icon {
@@ -150,4 +141,11 @@ button:hover { background: var(--primary-color); }
     align-items: center;
     padding: 0 4px;
     border: 2px solid var(--dark-color);
+    /* Прячем счетчик, если он 0 */
+    display: none; 
+}
+
+/* Показываем счетчик, когда в корзине что-то есть */
+.floating-cart:not(.empty) #cart-count {
+    display: flex;
 }
