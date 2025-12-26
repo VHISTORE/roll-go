@@ -18,9 +18,16 @@
     </header>
 
     <main class="container">
+        <div class="delivery-status">
+            <span>⚡ Delivery: <b>~40 mins</b></span>
+            <span>📍 Free delivery on orders over £20</span>
+        </div>
+
+        <h2 class="section-title">Premium Rolls</h2>
         <div class="menu-grid">
             <div class="product-card">
                 <div class="badge hot">HOT</div>
+                <div class="pcs-badge">8 pcs</div>
                 <img src="https://images.unsplash.com/photo-1617196034183-421b4917c92d?w=500" alt="Canada Tempura">
                 <div class="card-info">
                     <h3>Canada Tempura</h3>
@@ -28,12 +35,13 @@
                     <div class="bonus-info">Incl. Wasabi, Ginger, Soy</div>
                 </div>
                 <div class="card-footer">
-                    <span class="price">$14.00</span>
-                    <button class="add-to-cart" data-name="Canada Tempura">Add</button>
+                    <span class="price">£--.--</span>
+                    <button class="add-to-cart" data-name="Canada Tempura" data-price="0">Add</button>
                 </div>
             </div>
 
             <div class="product-card">
+                <div class="pcs-badge">8 pcs</div>
                 <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=500" alt="Hakusan Roll">
                 <div class="card-info">
                     <h3>Hakusan Roll</h3>
@@ -41,98 +49,78 @@
                     <div class="bonus-info">Incl. Wasabi, Ginger, Soy</div>
                 </div>
                 <div class="card-footer">
-                    <span class="price">$13.50</span>
-                    <button class="add-to-cart" data-name="Hakusan Roll">Add</button>
+                    <span class="price">£--.--</span>
+                    <button class="add-to-cart" data-name="Hakusan Roll" data-price="0">Add</button>
                 </div>
             </div>
 
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1559466273-d95e72debaf8?w=500" alt="California Crab">
+            </div>
+
+        <h2 class="section-title">Drinks</h2>
+        <div class="menu-grid">
+            <div class="product-card drink-card">
+                <div class="pcs-badge">0.33L</div>
                 <div class="card-info">
-                    <h3>California Crab</h3>
-                    <p>Snow crab, cream cheese, avocado, cucumber, coated in orange tobiko.</p>
-                    <div class="bonus-info">Incl. Wasabi, Ginger, Soy</div>
+                    <h3>Coke / Sprite / Fanta</h3>
+                    <p>Chilled canned soft drink.</p>
                 </div>
                 <div class="card-footer">
-                    <span class="price">$11.00</span>
-                    <button class="add-to-cart" data-name="California Crab">Add</button>
+                    <span class="price">£1.50</span>
+                    <button class="add-to-cart" data-name="Soft Drink Can" data-price="1.50">Add</button>
                 </div>
             </div>
 
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1633478062482-790e3b5dd810?w=500" alt="California Shrimp">
+            <div class="product-card drink-card">
+                <div class="pcs-badge">1.25L</div>
                 <div class="card-info">
-                    <h3>California Shrimp</h3>
-                    <p>Tiger shrimp, cream cheese, fresh avocado, cucumber, and tobiko.</p>
-                    <div class="bonus-info">Incl. Wasabi, Ginger, Soy</div>
+                    <h3>Coca-Cola Classic</h3>
+                    <p>Large bottle for sharing.</p>
                 </div>
                 <div class="card-footer">
-                    <span class="price">$12.50</span>
-                    <button class="add-to-cart" data-name="California Shrimp">Add</button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="badge hot">BEST</div>
-                <img src="https://images.unsplash.com/photo-1634868263544-36209f993f4e?w=500" alt="Philadelphia">
-                <div class="card-info">
-                    <h3>Philadelphia</h3>
-                    <p>Premium salmon, triple cream cheese, avocado, cucumber, and tobiko.</p>
-                    <div class="bonus-info">Incl. Wasabi, Ginger, Soy</div>
-                </div>
-                <div class="card-footer">
-                    <span class="price">$15.00</span>
-                    <button class="add-to-cart" data-name="Philadelphia">Add</button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=500" alt="Abu-Dhabi">
-                <div class="card-info">
-                    <h3>Abu-Dhabi</h3>
-                    <p>Salmon, shrimp, cheddar cheese, avocado, and double portion of tobiko.</p>
-                    <div class="bonus-info">Incl. Wasabi, Ginger, Soy</div>
-                </div>
-                <div class="card-footer">
-                    <span class="price">$16.00</span>
-                    <button class="add-to-cart" data-name="Abu-Dhabi">Add</button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="badge hot">NEW</div>
-                <img src="https://images.unsplash.com/photo-1582450871972-ab5ca641643d?w=500" alt="Tempura Special">
-                <div class="card-info">
-                    <h3>Tempura Special</h3>
-                    <p>Tempura shrimp, sesame seeds, cucumber, topped with mayo and red caviar.</p>
-                    <div class="bonus-info">Incl. Wasabi, Ginger, Soy</div>
-                </div>
-                <div class="card-footer">
-                    <span class="price">$13.00</span>
-                    <button class="add-to-cart" data-name="Tempura Special">Add</button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=500" alt="Banzai Roll">
-                <div class="card-info">
-                    <h3>Banzai Roll</h3>
-                    <p>Salmon, eel, cream cheese, avocado, cucumber, finished with unagi sauce.</p>
-                    <div class="bonus-info">Incl. Wasabi, Ginger, Soy</div>
-                </div>
-                <div class="card-footer">
-                    <span class="price">$14.50</span>
-                    <button class="add-to-cart" data-name="Banzai Roll">Add</button>
+                    <span class="price">£3.50</span>
+                    <button class="add-to-cart" data-name="Coke 1.25L" data-price="3.50">Add</button>
                 </div>
             </div>
         </div>
     </main>
 
+    <div class="cart-modal" id="cart-modal">
+        <div class="modal-content">
+            <button class="close-btn" id="close-cart">&times;</button>
+            <h2>Your Order</h2>
+            
+            <div id="cart-items-container">
+                </div>
+
+            <div class="sauces-section">
+                <h4>Choose Free Sauces:</h4>
+                <div class="sauce-options">
+                    <label><input type="checkbox" name="sauce" value="Ginger"> Ginger</label>
+                    <label><input type="checkbox" name="sauce" value="Wasabi"> Wasabi</label>
+                    <label><input type="checkbox" name="sauce" value="Soy"> Soy Sauce</label>
+                    <label><input type="checkbox" name="sauce" value="Unagi"> Unagi Sauce</label>
+                </div>
+            </div>
+
+            <form class="checkout-form">
+                <h4>Delivery Address</h4>
+                <input type="text" placeholder="Full Name" required>
+                <input type="tel" placeholder="Phone Number" required>
+                <input type="text" placeholder="Post Code" required>
+                <div class="address-row">
+                    <input type="text" placeholder="Street" required>
+                    <input type="text" placeholder="House/Flat No." required>
+                </div>
+                <button type="submit" class="order-btn">Confirm Order</button>
+            </form>
+        </div>
+    </div>
+
     <footer class="main-footer">
         <div class="container footer-content">
             <div class="footer-brand">
                 <span class="logo-text">ROLL & GO</span>
-                <p>Premium sushi delivery for those who value quality. Fresh ingredients every single day.</p>
+                <p>Premium sushi delivery for those who value quality.</p>
             </div>
             <div class="footer-contacts">
                 <h4>Contact Us</h4>
@@ -141,11 +129,9 @@
             </div>
             <div class="footer-hours">
                 <h4>Working Hours</h4>
-                <p>Daily: 11:00 AM - 11:00 PM</p>
+                <p>Tue - Sun: 3:30 PM - 9:30 PM</p>
+                <p style="color: var(--primary-color); font-weight: bold;">Monday: CLOSED</p>
             </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 ROLL & GO. All rights reserved.</p>
         </div>
     </footer>
 
