@@ -25,7 +25,6 @@
     <main class="container">
         <h2 class="section-title">Premium Rolls</h2>
         <div class="menu-grid">
-            
             <div class="product-card">
                 <div class="badge hot">HOT</div>
                 <div class="pcs-badge">8 pcs</div>
@@ -184,7 +183,6 @@
                     <button class="add-to-cart" data-name="Crisp Harmony Set" data-price="21.90">Add</button>
                 </div>
             </div>
-
             <div class="product-card set-card">
                 <div class="badge hot">MINI</div>
                 <div class="pcs-badge">16 pcs</div>
@@ -197,7 +195,6 @@
                     <button class="add-to-cart" data-name="Northern Bite Set" data-price="22.80">Add</button>
                 </div>
             </div>
-
             <div class="product-card set-card">
                 <div class="pcs-badge">24 pcs</div>
                 <div class="card-info">
@@ -209,7 +206,6 @@
                     <button class="add-to-cart" data-name="Pacific Trio Set" data-price="39.60">Add</button>
                 </div>
             </div>
-
             <div class="product-card set-card">
                 <div class="pcs-badge">24 pcs</div>
                 <div class="card-info">
@@ -221,7 +217,6 @@
                     <button class="add-to-cart" data-name="Golden Globe Set" data-price="41.20">Add</button>
                 </div>
             </div>
-
             <div class="product-card set-card">
                 <div class="badge hot">BIG</div>
                 <div class="pcs-badge">32 pcs</div>
@@ -234,7 +229,6 @@
                     <button class="add-to-cart" data-name="Ocean Symphony Set" data-price="49.20">Add</button>
                 </div>
             </div>
-
             <div class="product-card set-card">
                 <div class="badge hot">BIG</div>
                 <div class="pcs-badge">32 pcs</div>
@@ -294,17 +288,11 @@
             <div class="cart-delivery-info">
                 <div class="info-item">
                     <span class="icon">⚡</span>
-                    <div>
-                        <p class="label">Delivery</p>
-                        <p class="value">~40 mins</p>
-                    </div>
+                    <div><p class="label">Delivery</p><p class="value">~40 mins</p></div>
                 </div>
                 <div class="info-item">
                     <span class="icon">🚚</span>
-                    <div>
-                        <p class="label">Fee</p>
-                        <p class="value" id="delivery-cost">Select area</p>
-                    </div>
+                    <div><p class="label">Fee</p><p class="value" id="delivery-cost">Select area</p></div>
                 </div>
             </div>
 
@@ -360,15 +348,12 @@
 
                 <div class="payment-section">
                     <h3>Payment Method</h3>
-                    <div class="payment-options">
-                        <label class="payment-chip">
-                            <input type="radio" name="payment" value="online" checked>
-                            <span>Online Payment</span>
-                        </label>
-                        <label class="payment-chip">
-                            <input type="radio" name="payment" value="delivery">
-                            <span>On Delivery</span>
-                        </label>
+                    <div class="select-wrapper">
+                        <select id="payment-method-select" required>
+                            <option value="online" selected>Online Payment (Apple Pay / PayPal)</option>
+                            <option value="terminal">Card Terminal on Delivery</option>
+                            <option value="cash">Cash on Delivery</option>
+                        </select>
                     </div>
                 </div>
 
@@ -387,9 +372,9 @@
                     </div>
                 </div>
 
-                <div id="paypal-button-container" style="margin-top: 20px; display: none;"></div>
+                <div id="paypal-button-container" style="margin-top: 20px;"></div>
 
-                <button type="submit" class="order-btn" id="main-confirm-btn">Confirm Order</button>
+                <button type="submit" class="order-btn" id="main-confirm-btn" style="display: none;">Confirm Order</button>
             </form>
         </div>
     </div>
