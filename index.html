@@ -276,35 +276,60 @@
 
     <div class="cart-modal" id="cart-modal">
         <div class="modal-content">
-            <button class="close-btn" id="close-cart">&times;</button>
-            <h2>Checkout</h2>
-            <div class="cart-delivery-header">
-                <span>⚡ Delivery: <b>~40 mins</b></span>
-                <span>🚚 Fee: <b id="delivery-cost">Calculated later</b></span>
+            <div class="modal-header">
+                <h2>Your Order</h2>
+                <button class="close-btn" id="close-cart">&times;</button>
             </div>
-            <div id="cart-items-container"></div>
-            <div class="total-section"><span>Subtotal:</span><span id="cart-total-price">£0.00</span></div>
-            
+
+            <div class="cart-delivery-info">
+                <div class="info-item">
+                    <span class="icon">⚡</span>
+                    <div>
+                        <p class="label">Delivery</p>
+                        <p class="value">~40 mins</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="icon">🚚</span>
+                    <div>
+                        <p class="label">Fee</p>
+                        <p class="value" id="delivery-cost">Calculated later</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cart-items-container" class="items-list">
+                </div>
+
             <div class="sauces-section">
-                <h4>Choose Free Sauces:</h4>
+                <h3>Free Sauces</h3>
                 <div class="sauce-options">
-                    <label><input type="checkbox"> Ginger</label>
-                    <label><input type="checkbox"> Wasabi</label>
-                    <label><input type="checkbox"> Soy Sauce</label>
-                    <label><input type="checkbox"> Unagi</label>
+                    <label class="sauce-chip"><input type="checkbox"> Ginger</label>
+                    <label class="sauce-chip"><input type="checkbox"> Wasabi</label>
+                    <label class="sauce-chip"><input type="checkbox"> Soy Sauce</label>
+                    <label class="sauce-chip"><input type="checkbox"> Unagi</label>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <div class="total-row">
+                    <span>Subtotal</span>
+                    <span id="cart-total-price">£0.00</span>
                 </div>
             </div>
 
             <form class="checkout-form">
-                <h4>Delivery Details</h4>
-                <input type="text" placeholder="Full Name" required>
-                <input type="tel" placeholder="Phone Number" required>
+                <h3>Delivery Details</h3>
+                <div class="input-group">
+                    <input type="text" placeholder="Full Name" required>
+                    <input type="tel" placeholder="Phone Number" required>
+                </div>
                 <input type="text" placeholder="Post Code" required>
                 <div class="address-row">
                     <input type="text" placeholder="Street" required>
-                    <input type="text" placeholder="House / Flat No." required>
+                    <input type="text" placeholder="Flat / House No." required>
                 </div>
-                <button type="submit" class="order-btn">Confirm Order</button>
+                <button type="submit" class="order-btn">Confirm & Pay</button>
             </form>
         </div>
     </div>
