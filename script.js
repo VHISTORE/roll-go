@@ -63,7 +63,7 @@ async function sendOrderToTelegram(paymentMethod, status = "NEW ORDER 🍣") {
 }
 
 /**
- * 2. PAYPAL / APPLE PAY (ФИНАЛЬНАЯ ВЕРСИЯ)
+ * 2. PAYPAL / APPLE PAY
  */
 async function initPayPalButtons() {
     if (paypalButtonContainer.innerHTML !== "") return;
@@ -71,19 +71,23 @@ async function initPayPalButtons() {
     try {
         let isApplePayEligible = false;
 
-        // Проверяем доступность Apple Pay программно
+        // Проверяем доступность Apple Pay программно, чтобы не вызвать ошибку инициализации
         if (window.paypal && paypal.Applepay) {
-            const applePayConfig = await paypal.Applepay().config();
-            if (applePayConfig.isEligible) {
-                isApplePayEligible = true;
-                console.log("Apple Pay eligible: YES");
+            try {
+                const applePayConfig = await paypal.Applepay().config();
+                if (applePayConfig.isEligible) {
+                    isApplePayEligible = true;
+                    console.log("Apple Pay eligible: YES");
+                }
+            } catch (e) {
+                console.log("Apple Pay check skipped or not supported");
             }
         }
 
         const buttonConfig = {
             style: { 
                 layout: 'vertical', 
-                color: 'black', // Черный цвет идеален для Apple Pay
+                color: 'black', 
                 shape: 'rect', 
                 label: 'pay' 
             },
@@ -105,7 +109,7 @@ async function initPayPalButtons() {
             }
         };
 
-        // Если Apple Pay доступен — форсируем его как единственный источник
+        // Если Apple Pay доступен — форсируем его
         if (isApplePayEligible) {
             buttonConfig.fundingSource = paypal.FUNDING.APPLEPAY;
         }
@@ -114,8 +118,10 @@ async function initPayPalButtons() {
 
     } catch (err) {
         console.error('Failed to init PayPal:', err);
-        // Запасной вариант: грузим обычные кнопки если проверка упала
-        paypal.Buttons().render('#paypal-button-container');
+        // Запасной вариант: рендерим стандартные кнопки без форсирования
+        paypal.Buttons({
+            style: { layout: 'vertical', color: 'blue', shape: 'rect' }
+        }).render('#paypal-button-container');
     }
 }
 
