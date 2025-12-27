@@ -1,12 +1,10 @@
 let cart = [];
 let personCount = 1;
-const MIN_ORDER_AMOUNT = 15.00; // Минимальная сумма заказа
+const MIN_ORDER_AMOUNT = 15.00; 
 
-// --- ТВОИ ДАННЫЕ TELEGRAM ---
 const TG_TOKEN = "8435173530:AAHQIA-MQRwAvuS9RFzMb1UZPFTpJF6fvMM"; 
 const TG_CHAT_IDS = ["5776210499", "5512197362", "1979575911"]; 
 
-// Элементы интерфейса
 const cartCountElement = document.getElementById('cart-count');
 const cartButton = document.getElementById('cart-button');
 const cartModal = document.getElementById('cart-modal');
@@ -24,13 +22,10 @@ const personCountDisplay = document.getElementById('person-count');
 const paypalButtonContainer = document.getElementById('paypal-button-container');
 const mainConfirmBtn = document.getElementById('main-confirm-btn');
 
-// --- НАСТРОЙКИ ПО УМОЛЧАНИЮ ---
+
 paypalButtonContainer.style.display = 'none';
 mainConfirmBtn.style.display = 'block';
 
-/**
- * 1. ОТПРАВКА В TELEGRAM (ДЛЯ 3-х ПОЛУЧАТЕЛЕЙ)
- */
 async function sendOrderToTelegram(paymentMethod, status = "NEW ORDER 🍣") {
     const name = checkoutForm.querySelector('input[placeholder="Name"]').value;
     const phone = checkoutForm.querySelector('input[placeholder="Phone Number"]').value;
@@ -67,9 +62,6 @@ async function sendOrderToTelegram(paymentMethod, status = "NEW ORDER 🍣") {
     }
 }
 
-/**
- * 2. PAYPAL / APPLE PAY
- */
 async function initPayPalButtons() {
     if (paypalButtonContainer.innerHTML !== "") return;
 
@@ -135,9 +127,6 @@ paymentSelect.addEventListener('change', (e) => {
     }
 });
 
-/**
- * 3. ЛОГИКА ТОВАРОВ И КОРЗИНЫ
- */
 document.querySelectorAll('.add-to-cart').forEach(button => {
     button.addEventListener('click', () => {
         const name = button.getAttribute('data-name');
@@ -190,7 +179,6 @@ function calculateTotal() {
         deliveryHeaderCost.innerText = deliveryFee > 0 ? `£${deliveryFee.toFixed(2)}` : "Select area";
     }
 
-    // --- ПРОВЕРКА МИНИМАЛЬНОЙ СУММЫ ---
     let minOrderWarning = document.getElementById('min-order-warning');
     if (subtotal < MIN_ORDER_AMOUNT) {
         if (!minOrderWarning) {
@@ -207,14 +195,13 @@ function calculateTotal() {
         }
         minOrderWarning.innerText = `Min. order amount is £${MIN_ORDER_AMOUNT.toFixed(2)}. Add £${(MIN_ORDER_AMOUNT - subtotal).toFixed(2)} more.`;
         
-        // Блокируем кнопки
         mainConfirmBtn.disabled = true;
         mainConfirmBtn.style.opacity = '0.5';
         paypalButtonContainer.style.pointerEvents = 'none';
         paypalButtonContainer.style.opacity = '0.5';
     } else {
         if (minOrderWarning) minOrderWarning.remove();
-        // Разблокируем кнопки
+        
         mainConfirmBtn.disabled = false;
         mainConfirmBtn.style.opacity = '1';
         paypalButtonContainer.style.pointerEvents = 'all';
@@ -252,9 +239,6 @@ function updateCart() {
     calculateTotal();
 }
 
-/**
- * 4. УПРАВЛЕНИЕ ОКНАМИ
- */
 cartButton.addEventListener('click', () => { 
     if (cart.length > 0) { 
         cartModal.style.display = 'block'; 
