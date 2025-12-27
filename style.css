@@ -78,11 +78,12 @@ nav { display: flex; justify-content: center; align-items: center; }
 
 .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
 
+/* Унификация картинок для роллов, сетов и напитков */
 .product-card img { 
     width: 100%; 
     height: 220px; 
     object-fit: cover; 
-    background-color: #f9f9f9;
+    background-color: #f0f0f0; /* Цвет фона, пока картинка не загружена */
 }
 
 .pcs-badge {
@@ -251,11 +252,12 @@ button.add-to-cart:hover { background: #000; transform: scale(1.05); }
     box-sizing: border-box;
     font-weight: 600;
     color: var(--dark-color);
-    transition: border-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 #location-select:focus, #payment-method-select:focus {
     border-color: var(--dark-color);
+    background-color: white;
     outline: none;
 }
 
@@ -270,7 +272,7 @@ button.add-to-cart:hover { background: #000; transform: scale(1.05); }
     color: var(--text-muted); 
 }
 
-/* Payment Section specific spacing */
+/* Payment Section spacing */
 .payment-section { margin: 20px 0; }
 .payment-section h3 { font-size: 1rem; margin-bottom: 12px; }
 
@@ -306,17 +308,123 @@ button.add-to-cart:hover { background: #000; transform: scale(1.05); }
 }
 .order-btn:hover { background: #000; }
 
-/* Footer */
-.main-footer { background-color: var(--white); padding: 50px 0 0; border-top: 1px solid rgba(0,0,0,0.05); margin-top: 50px; }
-.footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 40px; }
-.footer-link { display: flex; align-items: center; margin-bottom: 10px; text-decoration: none; color: var(--dark-color); font-size: 0.95rem; }
-.footer-bottom { background: #f8f9fa; padding: 20px 0; text-align: center; border-top: 1px solid #eee; }
+/* --- ОБНОВЛЕННЫЙ ФУТЕР --- */
+.main-footer {
+    background-color: var(--dark-color);
+    color: white;
+    padding: 60px 0 20px;
+    margin-top: 80px;
+    border-radius: 40px 40px 0 0; /* Закругление верхней части */
+}
 
-/* Responsive */
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    padding-bottom: 40px;
+}
+
+.brand-description {
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-top: 15px;
+    font-size: 0.95rem;
+}
+
+.footer-section h4 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.footer-section h4::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 30px;
+    height: 2px;
+    background: var(--primary-color);
+}
+
+.contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-link {
+    color: white;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-link:hover {
+    color: var(--primary-color);
+}
+
+.footer-icon {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.hours-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.hours-list li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    color: #d1d1d1;
+}
+
+.hours-list li.closed {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 20px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* --- RESPONSIVE --- */
 @media (max-width: 480px) {
     .cart-modal { padding: 0; }
     .modal-content { margin: 0; width: 100%; min-height: 100vh; border-radius: 0; padding: 20px 15px; }
     .address-row { grid-template-columns: 1fr; }
     .cart-delivery-info { grid-template-columns: 1fr; }
     .back-btn { padding: 6px 12px; font-size: 0.8rem; }
+    
+    /* Мобильный футер */
+    .main-footer {
+        border-radius: 20px 20px 0 0;
+        padding: 40px 0 20px;
+    }
+    .footer-content {
+        text-align: center;
+    }
+    .footer-section h4::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .footer-link {
+        justify-content: center;
+    }
+    .hours-list li {
+        justify-content: center;
+        gap: 10px;
+    }
 }
