@@ -18,9 +18,6 @@ const deliveryHeaderCost = document.getElementById('delivery-cost');
 const locationSelect = document.getElementById('location-select');
 const checkoutForm = document.querySelector('.checkout-form');
 
-// Элементы управления персонами
-const personMinus = document.getElementById('person-minus');
-const personPlus = document.getElementById('person-plus');
 const personCountDisplay = document.getElementById('person-count');
 const paypalButtonContainer = document.getElementById('paypal-button-container');
 const mainConfirmBtn = document.getElementById('main-confirm-btn');
@@ -51,15 +48,9 @@ async function sendOrderToTelegram(paymentMethod, status = "NEW ORDER 🍣") {
         await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: TG_CHAT_ID,
-                text: message,
-                parse_mode: 'Markdown'
-            })
+            body: JSON.stringify({ chat_id: TG_CHAT_ID, text: message, parse_mode: 'Markdown' })
         });
-    } catch (error) {
-        console.error('Telegram Error:', error);
-    }
+    } catch (e) { console.error(e); }
 }
 
 /**
@@ -68,64 +59,59 @@ async function sendOrderToTelegram(paymentMethod, status = "NEW ORDER 🍣") {
 async function initPayPalButtons() {
     if (paypalButtonContainer.innerHTML !== "") return;
 
-    try {
-        let isApplePayEligible = false;
-
-        // Проверяем доступность Apple Pay программно, чтобы не вызвать ошибку инициализации
-        if (window.paypal && paypal.Applepay) {
-            try {
-                const applePayConfig = await paypal.Applepay().config();
-                if (applePayConfig.isEligible) {
-                    isApplePayEligible = true;
-                    console.log("Apple Pay eligible: YES");
-                }
-            } catch (e) {
-                console.log("Apple Pay check skipped or not supported");
-            }
-        }
-
-        const buttonConfig = {
-            style: { 
-                layout: 'vertical', 
-                color: 'black', 
-                shape: 'rect', 
-                label: 'pay' 
-            },
+    const renderDefaultButtons = () => {
+        paypal.Buttons({
+            style: { layout: 'vertical', color: 'black', shape: 'rect', label: 'pay' },
             createOrder: (data, actions) => {
-                const total = cartTotalPriceElement.innerText.replace('£', '');
                 return actions.order.create({
-                    purchase_units: [{ amount: { value: total } }]
+                    purchase_units: [{ amount: { value: cartTotalPriceElement.innerText.replace('£', '') } }]
                 });
             },
             onApprove: (data, actions) => {
-                return actions.order.capture().then(async details => {
+                return actions.order.capture().then(async () => {
                     await sendOrderToTelegram("Paid Online ✅", "PAID ORDER 💳");
-                    alert('Success! Order paid and sent to the kitchen.');
+                    alert('Success!');
                     resetFullState();
                 });
-            },
-            onError: (err) => {
-                console.error('Payment Error:', err);
             }
-        };
-
-        // Если Apple Pay доступен — форсируем его
-        if (isApplePayEligible) {
-            buttonConfig.fundingSource = paypal.FUNDING.APPLEPAY;
-        }
-
-        paypal.Buttons(buttonConfig).render('#paypal-button-container');
-
-    } catch (err) {
-        console.error('Failed to init PayPal:', err);
-        // Запасной вариант: рендерим стандартные кнопки без форсирования
-        paypal.Buttons({
-            style: { layout: 'vertical', color: 'blue', shape: 'rect' }
         }).render('#paypal-button-container');
+    };
+
+    try {
+        if (window.paypal && paypal.Applepay) {
+            const config = await paypal.Applepay().config();
+            if (config.isEligible) {
+                // Пытаемся отрендерить Apple Pay принудительно
+                paypal.Buttons({
+                    fundingSource: paypal.FUNDING.APPLEPAY,
+                    style: { color: 'black', shape: 'rect', label: 'pay' },
+                    createOrder: (data, actions) => {
+                        return actions.order.create({
+                            purchase_units: [{ amount: { value: cartTotalPriceElement.innerText.replace('£', '') } }]
+                        });
+                    },
+                    onApprove: (data, actions) => {
+                        return actions.order.capture().then(async () => {
+                            await sendOrderToTelegram("Apple Pay ✅", "PAID ORDER 💳");
+                            alert('Success!');
+                            resetFullState();
+                        });
+                    }
+                }).render('#paypal-button-container').catch(e => {
+                    console.log("Apple Pay render failed, using default");
+                    renderDefaultButtons();
+                });
+            } else {
+                renderDefaultButtons();
+            }
+        } else {
+            renderDefaultButtons();
+        }
+    } catch (err) {
+        renderDefaultButtons();
     }
 }
 
-// Переключение кнопок при выборе оплаты
 document.querySelectorAll('input[name="payment"]').forEach(input => {
     input.addEventListener('change', (e) => {
         if (e.target.value === 'online') {
@@ -147,30 +133,21 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
         const name = button.getAttribute('data-name');
         const price = parseFloat(button.getAttribute('data-price'));
         const existingItem = cart.find(item => item.name === name);
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            cart.push({ name, price, quantity: 1 });
-        }
+        if (existingItem) { existingItem.quantity += 1; } 
+        else { cart.push({ name, price, quantity: 1 }); }
         updateCart();
-        animateCartButton(button);
+        
+        button.innerText = 'Added!';
+        button.style.backgroundColor = '#27ae60';
+        setTimeout(() => {
+            button.innerText = 'Add';
+            button.style.backgroundColor = '';
+        }, 400);
     });
 });
 
-function animateCartButton(button) {
-    const originalText = button.innerText;
-    button.innerText = 'Added!';
-    button.style.backgroundColor = '#27ae60';
-    cartButton.style.transform = 'scale(1.2)';
-    setTimeout(() => {
-        button.innerText = originalText;
-        button.style.backgroundColor = '';
-        cartButton.style.transform = 'scale(1)';
-    }, 400);
-}
-
-personPlus.addEventListener('click', () => { personCount++; personCountDisplay.innerText = personCount; });
-personMinus.addEventListener('click', () => { if (personCount > 1) { personCount--; personCountDisplay.innerText = personCount; } });
+document.getElementById('person-plus').addEventListener('click', () => { personCount++; personCountDisplay.innerText = personCount; });
+document.getElementById('person-minus').addEventListener('click', () => { if (personCount > 1) { personCount--; personCountDisplay.innerText = personCount; } });
 
 window.changeQuantity = function(name, delta) {
     const item = cart.find(i => i.name === name);
@@ -185,14 +162,10 @@ function calculateTotal() {
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const deliveryFee = parseFloat(locationSelect.value) || 0;
     const total = subtotal + deliveryFee;
-
-    if (subtotalElement) subtotalElement.innerText = `£${subtotal.toFixed(2)}`;
-    if (deliveryFeeElement) deliveryFeeElement.innerText = `£${deliveryFee.toFixed(2)}`;
-    if (cartTotalPriceElement) cartTotalPriceElement.innerText = `£${total.toFixed(2)}`;
-    
-    if (deliveryHeaderCost) {
-        deliveryHeaderCost.innerText = deliveryFee > 0 ? `£${deliveryFee.toFixed(2)}` : "Select area";
-    }
+    subtotalElement.innerText = `£${subtotal.toFixed(2)}`;
+    deliveryFeeElement.innerText = `£${deliveryFee.toFixed(2)}`;
+    cartTotalPriceElement.innerText = `£${total.toFixed(2)}`;
+    deliveryHeaderCost.innerText = deliveryFee > 0 ? `£${deliveryFee.toFixed(2)}` : "Select area";
 }
 
 if (locationSelect) locationSelect.addEventListener('change', calculateTotal);
@@ -211,11 +184,11 @@ function updateCart() {
         <div class="cart-item">
             <div class="item-info">
                 <div style="font-weight: 700;">${item.name}</div>
-                <div style="color: #e84118; font-weight: 800; font-size: 0.9rem;">£${(item.price * item.quantity).toFixed(2)}</div>
+                <div style="color: #e84118; font-weight: 800;">£${(item.price * item.quantity).toFixed(2)}</div>
             </div>
             <div class="item-controls">
                 <button type="button" class="qty-btn" onclick="changeQuantity('${item.name}', -1)">-</button>
-                <span style="font-weight: 700; min-width: 20px; text-align: center;">${item.quantity}</span>
+                <span>${item.quantity}</span>
                 <button type="button" class="qty-btn" onclick="changeQuantity('${item.name}', 1)">+</button>
             </div>
         </div>
@@ -223,20 +196,15 @@ function updateCart() {
     calculateTotal();
 }
 
-/**
- * 4. МОДАЛЬНОЕ ОКНО И СБРОС
- */
 cartButton.addEventListener('click', () => { if (cart.length > 0) { cartModal.style.display = 'block'; document.body.style.overflow = 'hidden'; } });
-closeCart.addEventListener('click', () => { cartModal.style.display = 'none'; document.body.style.overflow = 'auto'; });
-window.onclick = (e) => { if (e.target == cartModal) { cartModal.style.display = 'none'; document.body.style.overflow = 'auto'; } };
+document.getElementById('close-cart').addEventListener('click', () => { cartModal.style.display = 'none'; document.body.style.overflow = 'auto'; });
 
 function resetFullState() {
-    cart = [];
-    personCount = 1;
-    if (personCountDisplay) personCountDisplay.innerText = "1";
+    cart = []; personCount = 1;
+    personCountDisplay.innerText = "1";
     updateCart();
     checkoutForm.reset();
-    if (locationSelect) locationSelect.value = "";
+    locationSelect.value = "";
     document.body.style.overflow = 'auto';
     cartModal.style.display = 'none';
 }
@@ -244,8 +212,7 @@ function resetFullState() {
 checkoutForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!locationSelect.value) return alert('Please select delivery area!');
-    
-    await sendOrderToTelegram("Cash on Delivery 💵", "NEW ORDER 🍱");
-    alert('Thank you! Order sent to our team.');
+    await sendOrderToTelegram("Cash on Delivery 💵");
+    alert('Order sent!');
     resetFullState();
 });
