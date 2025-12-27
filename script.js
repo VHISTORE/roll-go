@@ -37,6 +37,7 @@ async function sendOrderToTelegram(paymentMethod, status = "NEW ORDER 🍣") {
     const sauces = Array.from(document.querySelectorAll('.sauce-chip input:checked'))
         .map(i => i.parentElement.innerText.trim()).join(', ');
 
+    // Формируем текст сообщения
     let message = `*${status}*\n\n`;
     message += `👤 *Customer:* ${name}\n`;
     message += `📞 *Phone:* ${phone}\n`;
@@ -68,32 +69,43 @@ async function sendOrderToTelegram(paymentMethod, status = "NEW ORDER 🍣") {
 async function initPayPalButtons() {
     if (paypalButtonContainer.innerHTML !== "") return;
 
-    // Проверяем, поддерживает ли устройство Apple Pay
-    const applePayConfig = await paypal.Applepay().config();
-    const isApplePayAllowed = applePayConfig.isEligible;
-
-    paypal.Buttons({
-        style: { 
-            layout: 'vertical', 
-            color: 'black', 
-            shape: 'rect', 
-            label: 'pay' 
-        },
-        // Если Apple Pay доступен, PayPal сам предложит его первым в списке Buttons
-        createOrder: (data, actions) => {
-            const total = cartTotalPriceElement.innerText.replace('£', '');
-            return actions.order.create({
-                purchase_units: [{ amount: { value: total } }]
-            });
-        },
-        onApprove: (data, actions) => {
-            return actions.order.capture().then(async details => {
-                await sendOrderToTelegram("Paid Online (PayPal/Apple Pay) ✅", "PAID ORDER 💳");
-                alert('Success! Order paid and sent to the kitchen.');
-                resetFullState();
-            });
+    try {
+        // Проверка возможности оплаты через Apple Pay (программный уровень)
+        if (window.paypal && paypal.Applepay) {
+            const applePayConfig = await paypal.Applepay().config();
+            if (applePayConfig.isEligible) {
+                console.log("Apple Pay eligible");
+            }
         }
-    }).render('#paypal-button-container');
+
+        paypal.Buttons({
+            style: { 
+                layout: 'vertical', 
+                color: 'black', 
+                shape: 'rect', 
+                label: 'pay' 
+            },
+            createOrder: (data, actions) => {
+                const total = cartTotalPriceElement.innerText.replace('£', '');
+                return actions.order.create({
+                    purchase_units: [{ amount: { value: total } }]
+                });
+            },
+            onApprove: (data, actions) => {
+                return actions.order.capture().then(async details => {
+                    await sendOrderToTelegram("Paid Online (PayPal/Apple Pay) ✅", "PAID ORDER 💳");
+                    alert('Success! Order paid and sent to the kitchen.');
+                    resetFullState();
+                });
+            },
+            onError: (err) => {
+                console.error('PayPal Buttons Error:', err);
+                alert('Payment window encountered an error. Please try again.');
+            }
+        }).render('#paypal-button-container');
+    } catch (err) {
+        console.error('Failed to init PayPal:', err);
+    }
 }
 
 // Переключение кнопок при выборе оплаты
@@ -161,7 +173,9 @@ function calculateTotal() {
     if (deliveryFeeElement) deliveryFeeElement.innerText = `£${deliveryFee.toFixed(2)}`;
     if (cartTotalPriceElement) cartTotalPriceElement.innerText = `£${total.toFixed(2)}`;
     
-    deliveryHeaderCost.innerText = deliveryFee > 0 ? `£${deliveryFee.toFixed(2)}` : "Select area";
+    if (deliveryHeaderCost) {
+        deliveryHeaderCost.innerText = deliveryFee > 0 ? `£${deliveryFee.toFixed(2)}` : "Select area";
+    }
 }
 
 if (locationSelect) locationSelect.addEventListener('change', calculateTotal);
@@ -202,7 +216,7 @@ window.onclick = (e) => { if (e.target == cartModal) { cartModal.style.display =
 function resetFullState() {
     cart = [];
     personCount = 1;
-    personCountDisplay.innerText = "1";
+    if (personCountDisplay) personCountDisplay.innerText = "1";
     updateCart();
     checkoutForm.reset();
     if (locationSelect) locationSelect.value = "";
