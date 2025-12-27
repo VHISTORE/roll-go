@@ -16,6 +16,7 @@ const subtotalElement = document.getElementById('cart-subtotal');
 const deliveryFeeElement = document.getElementById('display-delivery-fee');
 const deliveryHeaderCost = document.getElementById('delivery-cost');
 const locationSelect = document.getElementById('location-select');
+const paymentSelect = document.getElementById('payment-method-select');
 const checkoutForm = document.querySelector('.checkout-form');
 
 const personCountDisplay = document.getElementById('person-count');
@@ -69,8 +70,8 @@ async function initPayPalButtons() {
             },
             onApprove: (data, actions) => {
                 return actions.order.capture().then(async () => {
-                    await sendOrderToTelegram("Paid Online ✅", "PAID ORDER 💳");
-                    alert('Success!');
+                    await sendOrderToTelegram("PAID ONLINE ✅", "PAID ORDER 💳");
+                    alert('Success! Order received.');
                     resetFullState();
                 });
             }
@@ -81,7 +82,6 @@ async function initPayPalButtons() {
         if (window.paypal && paypal.Applepay) {
             const config = await paypal.Applepay().config();
             if (config.isEligible) {
-                // Пытаемся отрендерить Apple Pay принудительно
                 paypal.Buttons({
                     fundingSource: paypal.FUNDING.APPLEPAY,
                     style: { color: 'black', shape: 'rect', label: 'pay' },
@@ -92,41 +92,31 @@ async function initPayPalButtons() {
                     },
                     onApprove: (data, actions) => {
                         return actions.order.capture().then(async () => {
-                            await sendOrderToTelegram("Apple Pay ✅", "PAID ORDER 💳");
-                            alert('Success!');
+                            await sendOrderToTelegram("APPLE PAY ✅", "PAID ORDER 💳");
+                            alert('Success! Order received.');
                             resetFullState();
                         });
                     }
-                }).render('#paypal-button-container').catch(e => {
-                    console.log("Apple Pay render failed, using default");
-                    renderDefaultButtons();
-                });
-            } else {
-                renderDefaultButtons();
-            }
-        } else {
-            renderDefaultButtons();
-        }
-    } catch (err) {
-        renderDefaultButtons();
-    }
+                }).render('#paypal-button-container').catch(() => renderDefaultButtons());
+            } else { renderDefaultButtons(); }
+        } else { renderDefaultButtons(); }
+    } catch (err) { renderDefaultButtons(); }
 }
 
-document.querySelectorAll('input[name="payment"]').forEach(input => {
-    input.addEventListener('change', (e) => {
-        if (e.target.value === 'online') {
-            paypalButtonContainer.style.display = 'block';
-            mainConfirmBtn.style.display = 'none';
-            initPayPalButtons();
-        } else {
-            paypalButtonContainer.style.display = 'none';
-            mainConfirmBtn.style.display = 'block';
-        }
-    });
+// Логика переключения способов оплаты (Dropdown)
+paymentSelect.addEventListener('change', (e) => {
+    if (e.target.value === 'online') {
+        paypalButtonContainer.style.display = 'block';
+        mainConfirmBtn.style.display = 'none';
+        initPayPalButtons();
+    } else {
+        paypalButtonContainer.style.display = 'none';
+        mainConfirmBtn.style.display = 'block';
+    }
 });
 
 /**
- * 3. ЛОГИКА ТОВАРОВ
+ * 3. ЛОГИКА ТОВАРОВ И КОРЗИНЫ
  */
 document.querySelectorAll('.add-to-cart').forEach(button => {
     button.addEventListener('click', () => {
@@ -196,8 +186,11 @@ function updateCart() {
     calculateTotal();
 }
 
+/**
+ * 4. УПРАВЛЕНИЕ ОКНАМИ
+ */
 cartButton.addEventListener('click', () => { if (cart.length > 0) { cartModal.style.display = 'block'; document.body.style.overflow = 'hidden'; } });
-document.getElementById('close-cart').addEventListener('click', () => { cartModal.style.display = 'none'; document.body.style.overflow = 'auto'; });
+closeCart.addEventListener('click', () => { cartModal.style.display = 'none'; document.body.style.overflow = 'auto'; });
 
 function resetFullState() {
     cart = []; personCount = 1;
@@ -209,10 +202,16 @@ function resetFullState() {
     cartModal.style.display = 'none';
 }
 
+// Обработка формы (Terminal / Cash)
 checkoutForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!locationSelect.value) return alert('Please select delivery area!');
-    await sendOrderToTelegram("Cash on Delivery 💵");
-    alert('Order sent!');
+    
+    const method = paymentSelect.value;
+    if (method === 'online') return; // PayPal кнопки имеют свою логику
+
+    const methodLabel = method === 'terminal' ? "Card Terminal on Delivery 💳" : "Cash on Delivery 💵";
+    await sendOrderToTelegram(methodLabel, "NEW ORDER 🍱");
+    alert('Thank you! Your order has been sent to the team.');
     resetFullState();
 });
