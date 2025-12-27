@@ -37,7 +37,6 @@ async function sendOrderToTelegram(paymentMethod, status = "NEW ORDER 🍣") {
     const sauces = Array.from(document.querySelectorAll('.sauce-chip input:checked'))
         .map(i => i.parentElement.innerText.trim()).join(', ');
 
-    // Формируем текст сообщения
     let message = `*${status}*\n\n`;
     message += `👤 *Customer:* ${name}\n`;
     message += `📞 *Phone:* ${phone}\n`;
@@ -64,24 +63,27 @@ async function sendOrderToTelegram(paymentMethod, status = "NEW ORDER 🍣") {
 }
 
 /**
- * 2. PAYPAL / APPLE PAY
+ * 2. PAYPAL / APPLE PAY (ФИНАЛЬНАЯ ВЕРСИЯ)
  */
 async function initPayPalButtons() {
     if (paypalButtonContainer.innerHTML !== "") return;
 
     try {
-        // Проверка возможности оплаты через Apple Pay (программный уровень)
+        let isApplePayEligible = false;
+
+        // Проверяем доступность Apple Pay программно
         if (window.paypal && paypal.Applepay) {
             const applePayConfig = await paypal.Applepay().config();
             if (applePayConfig.isEligible) {
-                console.log("Apple Pay eligible");
+                isApplePayEligible = true;
+                console.log("Apple Pay eligible: YES");
             }
         }
 
-        paypal.Buttons({
+        const buttonConfig = {
             style: { 
                 layout: 'vertical', 
-                color: 'black', 
+                color: 'black', // Черный цвет идеален для Apple Pay
                 shape: 'rect', 
                 label: 'pay' 
             },
@@ -93,18 +95,27 @@ async function initPayPalButtons() {
             },
             onApprove: (data, actions) => {
                 return actions.order.capture().then(async details => {
-                    await sendOrderToTelegram("Paid Online (PayPal/Apple Pay) ✅", "PAID ORDER 💳");
+                    await sendOrderToTelegram("Paid Online ✅", "PAID ORDER 💳");
                     alert('Success! Order paid and sent to the kitchen.');
                     resetFullState();
                 });
             },
             onError: (err) => {
-                console.error('PayPal Buttons Error:', err);
-                alert('Payment window encountered an error. Please try again.');
+                console.error('Payment Error:', err);
             }
-        }).render('#paypal-button-container');
+        };
+
+        // Если Apple Pay доступен — форсируем его как единственный источник
+        if (isApplePayEligible) {
+            buttonConfig.fundingSource = paypal.FUNDING.APPLEPAY;
+        }
+
+        paypal.Buttons(buttonConfig).render('#paypal-button-container');
+
     } catch (err) {
         console.error('Failed to init PayPal:', err);
+        // Запасной вариант: грузим обычные кнопки если проверка упала
+        paypal.Buttons().render('#paypal-button-container');
     }
 }
 
@@ -228,7 +239,6 @@ checkoutForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!locationSelect.value) return alert('Please select delivery area!');
     
-    // Отправка для наличных
     await sendOrderToTelegram("Cash on Delivery 💵", "NEW ORDER 🍱");
     alert('Thank you! Order sent to our team.');
     resetFullState();
