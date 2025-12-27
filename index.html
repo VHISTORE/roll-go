@@ -315,6 +315,16 @@
                 </div>
             </div>
 
+            <div class="utensils-section">
+                <h3>Utensils (Chopsticks)</h3>
+                <div class="person-selector">
+                    <button type="button" class="qty-btn" id="person-minus">-</button>
+                    <span id="person-count">1</span>
+                    <button type="button" class="qty-btn" id="person-plus">+</button>
+                    <span class="utensils-label">Person(s)</span>
+                </div>
+            </div>
+
             <form class="checkout-form">
                 <h3>Delivery Details</h3>
                 <input type="text" placeholder="Name" required>
@@ -341,6 +351,20 @@
                 <div class="address-row">
                     <input type="text" placeholder="House / Flat No." required>
                     <input type="text" placeholder="Post Code" required>
+                </div>
+
+                <div class="payment-section">
+                    <h3>Payment Method</h3>
+                    <div class="payment-options">
+                        <label class="payment-chip">
+                            <input type="radio" name="payment" value="online" checked>
+                            <span>Online Payment</span>
+                        </label>
+                        <label class="payment-chip">
+                            <input type="radio" name="payment" value="delivery">
+                            <span>On Delivery</span>
+                        </label>
+                    </div>
                 </div>
 
                 <div class="summary-section">
