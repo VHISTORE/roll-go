@@ -4,7 +4,7 @@ let cart = [];
 const cartCountElement = document.getElementById('cart-count');
 const cartButton = document.getElementById('cart-button');
 const cartModal = document.getElementById('cart-modal');
-const closeCart = document.getElementById('close-cart');
+const closeCart = document.getElementById('close-cart'); // Кнопка "Back to Menu"
 const cartItemsContainer = document.getElementById('cart-items-container');
 const cartTotalPriceElement = document.getElementById('cart-total-price');
 const subtotalElement = document.getElementById('cart-subtotal');
@@ -47,7 +47,7 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
 
 /**
  * 2. Логика изменения количества (+ / -) внутри корзины
- * Привязана к глобальному окну для работы с динамическим HTML
+ * Привязана к window для работы с динамическим HTML
  */
 window.changeQuantity = function(name, delta) {
     const item = cart.find(i => i.name === name);
@@ -82,7 +82,7 @@ function calculateTotal() {
     }
 }
 
-// Пересчитываем итог сразу при выборе города в выпадающем списке
+// Пересчитываем итог сразу при выборе города в списке
 if (locationSelect) {
     locationSelect.addEventListener('change', calculateTotal);
 }
@@ -95,11 +95,11 @@ function updateCart() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartCountElement.innerText = totalItems;
     
-    // Если корзина пуста — скрываем её
+    // Если корзина пуста — скрываем её и возвращаем скролл
     if (totalItems === 0) {
         cartButton.classList.add('empty');
         cartModal.style.display = 'none';
-        document.body.style.overflow = 'auto'; // Возвращаем скролл
+        document.body.style.overflow = 'auto'; 
         return;
     }
 
@@ -115,9 +115,9 @@ function updateCart() {
                 </div>
             </div>
             <div class="item-controls">
-                <button class="qty-btn" onclick="changeQuantity('${item.name}', -1)">-</button>
+                <button type="button" class="qty-btn" onclick="changeQuantity('${item.name}', -1)">-</button>
                 <span style="font-weight: 700; min-width: 20px; text-align: center;">${item.quantity}</span>
-                <button class="qty-btn" onclick="changeQuantity('${item.name}', 1)">+</button>
+                <button type="button" class="qty-btn" onclick="changeQuantity('${item.name}', 1)">+</button>
             </div>
         </div>
     `).join('');
@@ -131,16 +131,17 @@ function updateCart() {
 cartButton.addEventListener('click', () => {
     if (cart.length > 0) {
         cartModal.style.display = 'block';
-        document.body.style.overflow = 'hidden'; // Блокируем прокрутку фона
+        document.body.style.overflow = 'hidden'; // Блокируем прокрутку фона сайта
     }
 });
 
+// Кнопка "Back to Menu"
 closeCart.addEventListener('click', () => {
     cartModal.style.display = 'none';
-    document.body.style.overflow = 'auto';
+    document.body.style.overflow = 'auto'; // Возвращаем прокрутку
 });
 
-// Закрытие при клике вне области контента
+// Закрытие при клике на темный фон вне модалки
 window.onclick = (event) => { 
     if (event.target == cartModal) {
         cartModal.style.display = 'none';
@@ -154,23 +155,23 @@ window.onclick = (event) => {
 checkoutForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
-    // Проверка выбора зоны доставки
+    // Валидация выбора зоны доставки
     if (!locationSelect.value || locationSelect.value === "") {
         alert('Please select a delivery area before confirming!');
         locationSelect.focus();
         return;
     }
     
-    // Собираем соусы (опционально для отправки на сервер/email)
+    // Собираем данные (для отправки в будущем)
     const selectedSauces = Array.from(document.querySelectorAll('.sauce-chip input:checked'))
         .map(input => input.parentElement.innerText.trim());
 
     // Имитация успешного заказа
     alert('Thank you for your order! We will contact you shortly.');
     
-    // Полная очистка
+    // Полная очистка корзины и сброс формы
     cart = [];
-    updateCart(); // Это само сбросит модалку и скролл
+    updateCart(); 
     checkoutForm.reset();
     if (locationSelect) locationSelect.value = "";
 });
