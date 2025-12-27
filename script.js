@@ -1,10 +1,11 @@
 let cart = [];
+let personCount = 1;
 
 // Элементы интерфейса
 const cartCountElement = document.getElementById('cart-count');
 const cartButton = document.getElementById('cart-button');
 const cartModal = document.getElementById('cart-modal');
-const closeCart = document.getElementById('close-cart'); // Кнопка "Back to Menu"
+const closeCart = document.getElementById('close-cart');
 const cartItemsContainer = document.getElementById('cart-items-container');
 const cartTotalPriceElement = document.getElementById('cart-total-price');
 const subtotalElement = document.getElementById('cart-subtotal');
@@ -13,15 +14,19 @@ const deliveryHeaderCost = document.getElementById('delivery-cost');
 const locationSelect = document.getElementById('location-select');
 const checkoutForm = document.querySelector('.checkout-form');
 
+// Элементы управления персонами
+const personMinus = document.getElementById('person-minus');
+const personPlus = document.getElementById('person-plus');
+const personCountDisplay = document.getElementById('person-count');
+
 /**
- * 1. Логика добавления товара в корзину
+ * 1. Добавление товара в корзину
  */
 document.querySelectorAll('.add-to-cart').forEach(button => {
     button.addEventListener('click', () => {
         const name = button.getAttribute('data-name');
         const price = parseFloat(button.getAttribute('data-price'));
         
-        // Ищем, есть ли уже такой товар в корзине
         const existingItem = cart.find(item => item.name === name);
         if (existingItem) {
             existingItem.quantity += 1;
@@ -31,7 +36,7 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
         
         updateCart();
 
-        // Визуальный отклик на кнопке (Added!)
+        // Анимация кнопки
         const originalText = button.innerText;
         button.innerText = 'Added!';
         button.style.backgroundColor = '#27ae60';
@@ -46,14 +51,27 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
 });
 
 /**
- * 2. Логика изменения количества (+ / -) внутри корзины
- * Привязана к window для работы с динамическим HTML
+ * 2. Управление количеством персон (палочек)
+ */
+personPlus.addEventListener('click', () => {
+    personCount++;
+    personCountDisplay.innerText = personCount;
+});
+
+personMinus.addEventListener('click', () => {
+    if (personCount > 1) {
+        personCount--;
+        personCountDisplay.innerText = personCount;
+    }
+});
+
+/**
+ * 3. Изменение количества товара внутри корзины
  */
 window.changeQuantity = function(name, delta) {
     const item = cart.find(i => i.name === name);
     if (item) {
         item.quantity += delta;
-        // Если количество стало 0 или меньше, удаляем товар
         if (item.quantity <= 0) {
             cart = cart.filter(i => i.name !== name);
         }
@@ -62,19 +80,17 @@ window.changeQuantity = function(name, delta) {
 };
 
 /**
- * 3. Математика: расчет итогов (Subtotal + Delivery = Total)
+ * 4. Расчет итогов (Subtotal + Delivery)
  */
 function calculateTotal() {
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const deliveryFee = parseFloat(locationSelect.value) || 0;
     const total = subtotal + deliveryFee;
 
-    // Обновляем текст в блоке итогов
     if (subtotalElement) subtotalElement.innerText = `£${subtotal.toFixed(2)}`;
     if (deliveryFeeElement) deliveryFeeElement.innerText = `£${deliveryFee.toFixed(2)}`;
     if (cartTotalPriceElement) cartTotalPriceElement.innerText = `£${total.toFixed(2)}`;
     
-    // Обновляем плашку доставки вверху корзины
     if (deliveryFee > 0) {
         deliveryHeaderCost.innerText = `£${deliveryFee.toFixed(2)}`;
     } else {
@@ -82,30 +98,26 @@ function calculateTotal() {
     }
 }
 
-// Пересчитываем итог сразу при выборе города в списке
 if (locationSelect) {
     locationSelect.addEventListener('change', calculateTotal);
 }
 
 /**
- * 4. Обновление интерфейса корзины (рендеринг списка)
+ * 5. Обновление интерфейса корзины
  */
 function updateCart() {
-    // Общее количество предметов для плавающей кнопки
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartCountElement.innerText = totalItems;
     
-    // Если корзина пуста — скрываем её и возвращаем скролл
     if (totalItems === 0) {
         cartButton.classList.add('empty');
         cartModal.style.display = 'none';
-        document.body.style.overflow = 'auto'; 
+        document.body.style.overflow = 'auto';
         return;
     }
 
     cartButton.classList.remove('empty');
 
-    // Генерируем HTML для списка товаров
     cartItemsContainer.innerHTML = cart.map((item) => `
         <div class="cart-item">
             <div class="item-info">
@@ -126,22 +138,20 @@ function updateCart() {
 }
 
 /**
- * 5. Управление модальным окном (Открыть/Закрыть)
+ * 6. Управление модальным окном
  */
 cartButton.addEventListener('click', () => {
     if (cart.length > 0) {
         cartModal.style.display = 'block';
-        document.body.style.overflow = 'hidden'; // Блокируем прокрутку фона сайта
+        document.body.style.overflow = 'hidden';
     }
 });
 
-// Кнопка "Back to Menu"
 closeCart.addEventListener('click', () => {
     cartModal.style.display = 'none';
-    document.body.style.overflow = 'auto'; // Возвращаем прокрутку
+    document.body.style.overflow = 'auto';
 });
 
-// Закрытие при клике на темный фон вне модалки
 window.onclick = (event) => { 
     if (event.target == cartModal) {
         cartModal.style.display = 'none';
@@ -150,28 +160,40 @@ window.onclick = (event) => {
 };
 
 /**
- * 6. Финальная отправка формы (Checkout)
+ * 7. Финальная отправка формы
  */
 checkoutForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
-    // Валидация выбора зоны доставки
     if (!locationSelect.value || locationSelect.value === "") {
         alert('Please select a delivery area before confirming!');
         locationSelect.focus();
         return;
     }
     
-    // Собираем данные (для отправки в будущем)
+    // Сбор данных заказа
     const selectedSauces = Array.from(document.querySelectorAll('.sauce-chip input:checked'))
         .map(input => input.parentElement.innerText.trim());
+        
+    const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
 
-    // Имитация успешного заказа
+    // Здесь можно сформировать объект для отправки на сервер или в телеграм
+    console.log({
+        items: cart,
+        utensils: personCount,
+        sauces: selectedSauces,
+        payment: paymentMethod,
+        total: cartTotalPriceElement.innerText
+    });
+
     alert('Thank you for your order! We will contact you shortly.');
     
-    // Полная очистка корзины и сброс формы
+    // Сброс всего состояния
     cart = [];
+    personCount = 1;
+    personCountDisplay.innerText = "1";
     updateCart(); 
     checkoutForm.reset();
     if (locationSelect) locationSelect.value = "";
+    document.body.style.overflow = 'auto';
 });
