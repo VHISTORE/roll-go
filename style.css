@@ -154,20 +154,30 @@ button.add-to-cart:hover { background: #000; }
 
 /* --- PREMIUM CART MODAL --- */
 .cart-modal {
-    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 3000;
-    animation: fadeIn 0.3s ease-out;
-    padding: 10px; /* Фикс для мобильных */
-    box-sizing: border-box;
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(0,0,0,0.6); 
+    backdrop-filter: blur(8px); 
+    z-index: 3000;
+    padding: 10px; /* Отступ от краев экрана на мобильных */
+    box-sizing: border-box; /* Важно: заставляет padding учитываться внутри 100% ширины */
+    overflow-y: auto;
 }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
 .modal-content {
-    background: white; width: 100%; max-width: 480px;
-    margin: 10px auto; border-radius: var(--radius-lg); padding: 25px;
-    max-height: 95vh; overflow-y: auto; position: relative;
+    background: white; 
+    width: 100%; 
+    max-width: 480px;
+    margin: 20px auto; 
+    border-radius: var(--radius-lg); 
+    padding: 25px;
+    position: relative;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box; /* Гарантирует, что модалка не "вылетит" по ширине */
 }
 
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -180,22 +190,36 @@ button.add-to-cart:hover { background: #000; }
 
 /* Delivery Info Bar */
 .cart-delivery-info {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 12px; 
+    margin-bottom: 20px;
+    width: 100%;
 }
 
 .info-item {
-    background: #f8f9fa; padding: 10px; border-radius: var(--radius-md);
-    display: flex; align-items: center; gap: 10px;
+    background: #f8f9fa; 
+    padding: 10px; 
+    border-radius: var(--radius-md);
+    display: flex; 
+    align-items: center; 
+    gap: 8px;
+    min-width: 0; /* Фикс для предотвращения растягивания контентом */
 }
 
 .info-item .icon { font-size: 1.2rem; }
 .info-item .label { font-size: 0.7rem; color: var(--text-muted); margin: 0; }
-.info-item .value { font-weight: 700; margin: 0; font-size: 0.85rem; }
+.info-item .value { font-weight: 700; margin: 0; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* Items List Styling */
 .cart-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 12px 0; border-bottom: 1px solid #f1f1f1;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    padding: 12px 0; 
+    border-bottom: 1px solid #f1f1f1;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .item-controls {
@@ -220,35 +244,6 @@ button.add-to-cart:hover { background: #000; }
     gap: 6px; cursor: pointer; transition: 0.2s;
 }
 .sauce-chip:has(input:checked) { background: var(--dark-color); color: white; }
-
-/* --- LOCATION SELECT --- */
-.select-wrapper {
-    position: relative;
-    margin-bottom: 12px;
-}
-
-#location-select {
-    width: 100%;
-    padding: 14px;
-    border-radius: 14px;
-    border: 2px solid #f0f0f0;
-    background: #f8f9fa;
-    appearance: none;
-    font-size: 1rem;
-    font-family: inherit;
-    cursor: pointer;
-}
-
-.select-wrapper::after {
-    content: '▼';
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.7rem;
-    pointer-events: none;
-    color: var(--text-muted);
-}
 
 /* --- SUMMARY SECTION --- */
 .summary-section {
@@ -276,12 +271,17 @@ button.add-to-cart:hover { background: #000; }
 /* --- CHECKOUT FORM --- */
 .checkout-form h3 { margin: 20px 0 12px; font-size: 1rem; }
 
-.checkout-form input {
-    width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 14px;
-    border: 2px solid #f0f0f0; background: #f8f9fa; box-sizing: border-box;
-    font-family: inherit; transition: 0.3s;
+.checkout-form input, .select-wrapper select {
+    width: 100%; 
+    padding: 14px; 
+    margin-bottom: 12px; 
+    border-radius: 14px;
+    border: 2px solid #f0f0f0; 
+    background: #f8f9fa; 
+    box-sizing: border-box; /* Все инпуты теперь строго внутри границ */
+    font-family: inherit; 
+    transition: 0.3s;
 }
-.checkout-form input:focus { border-color: var(--dark-color); background: white; outline: none; }
 
 .address-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
@@ -290,32 +290,39 @@ button.add-to-cart:hover { background: #000; }
     border: none; border-radius: 16px; font-weight: 800; font-size: 1.1rem;
     cursor: pointer; transition: transform 0.2s;
 }
-.order-btn:active { transform: scale(0.98); }
 
 /* --- FOOTER --- */
 .main-footer { background-color: var(--white); padding: 50px 0 0; border-top: 1px solid rgba(0,0,0,0.05); margin-top: 50px; }
 .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 40px; }
 .footer-link { display: flex; align-items: center; margin-bottom: 10px; text-decoration: none !important; color: var(--dark-color) !important; font-size: 0.95rem; }
-.footer-link:hover { color: var(--primary-color) !important; }
 .footer-link.mail::before { content: "✉"; margin-right: 10px; font-size: 1.1rem; }
 .footer-link.phone::before { content: "📞"; margin-right: 10px; font-size: 1rem; }
-.footer-hours p { margin: 4px 0; font-size: 0.9rem; }
-.closed-status { color: var(--primary-color); font-weight: bold; }
 .footer-bottom { background: #f8f9fa; padding: 20px 0; text-align: center; border-top: 1px solid #eee; }
-.footer-bottom p { margin: 0; font-size: 0.8rem; color: #a4b0be; letter-spacing: 0.5px; }
 
-/* --- RESPONSIVE --- */
-@media (max-width: 768px) {
-    .menu-grid { grid-template-columns: 1fr; }
-}
-
+/* --- RESPONSIVE FIXES --- */
 @media (max-width: 480px) {
-    .cart-modal { padding: 5px; }
-    .modal-content { 
-        padding: 18px; 
-        margin: 5px auto;
-        border-radius: 20px;
+    .container { padding: 0 15px; }
+    
+    .cart-modal { 
+        padding: 0; /* Полноэкранный режим на очень маленьких экранах */
     }
-    .modal-header h2 { font-size: 1.4rem; }
+    
+    .modal-content { 
+        margin: 0; 
+        width: 100%; 
+        min-height: 100vh; /* Растягиваем на весь экран */
+        border-radius: 0; 
+        padding: 20px 15px;
+    }
+
     .address-row { grid-template-columns: 1fr; }
+    
+    .cart-delivery-info {
+        grid-template-columns: 1fr; /* Колонки доставки одна под другой на телефонах */
+    }
+    
+    .item-controls {
+        gap: 6px;
+        padding: 4px 6px;
+    }
 }
