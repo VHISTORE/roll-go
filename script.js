@@ -3,7 +3,8 @@ let personCount = 1;
 
 // --- ТВОИ ДАННЫЕ TELEGRAM ---
 const TG_TOKEN = "8435173530:AAHQIA-MQRwAvuS9RFzMb1UZPFTpJF6fvMM"; 
-const TG_CHAT_ID = "5776210499"; 
+// Список получателей (Массив ID)
+const TG_CHAT_IDS = ["5776210499", "5512197362", "1979575911"]; 
 
 // Элементы интерфейса
 const cartCountElement = document.getElementById('cart-count');
@@ -24,12 +25,11 @@ const paypalButtonContainer = document.getElementById('paypal-button-container')
 const mainConfirmBtn = document.getElementById('main-confirm-btn');
 
 // --- НАСТРОЙКИ ПО УМОЛЧАНИЮ ---
-// Скрываем PayPal и показываем обычную кнопку, так как по умолчанию выбраны наличные
 paypalButtonContainer.style.display = 'none';
 mainConfirmBtn.style.display = 'block';
 
 /**
- * 1. ОТПРАВКА В TELEGRAM
+ * 1. ОТПРАВКА В TELEGRAM (ОБНОВЛЕНО ДЛЯ 3-х ПОЛУЧАТЕЛЕЙ)
  */
 async function sendOrderToTelegram(paymentMethod, status = "NEW ORDER 🍣") {
     const name = checkoutForm.querySelector('input[placeholder="Name"]').value;
@@ -50,24 +50,28 @@ async function sendOrderToTelegram(paymentMethod, status = "NEW ORDER 🍣") {
     message += `💳 *Method:* ${paymentMethod}\n`;
     message += `💰 *TOTAL:* ${cartTotalPriceElement.innerText}`;
 
-    try {
-        await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: TG_CHAT_ID,
-                text: message,
-                parse_mode: 'Markdown'
-            })
-        });
-    } catch (e) { console.error('Telegram Error:', e); }
+    // Цикл для отправки каждому пользователю из списка
+    for (const chatId of TG_CHAT_IDS) {
+        try {
+            await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            });
+        } catch (e) { 
+            console.error(`Error sending to ${chatId}:`, e); 
+        }
+    }
 }
 
 /**
  * 2. PAYPAL / APPLE PAY
  */
 async function initPayPalButtons() {
-    // Если контейнер уже содержит кнопки, не пересоздаем их
     if (paypalButtonContainer.innerHTML !== "") return;
 
     const renderDefaultButtons = () => {
@@ -121,7 +125,6 @@ async function initPayPalButtons() {
     }
 }
 
-// Логика переключения способов оплаты (Dropdown)
 paymentSelect.addEventListener('change', (e) => {
     if (e.target.value === 'online') {
         paypalButtonContainer.style.display = 'block';
@@ -240,23 +243,19 @@ function resetFullState() {
     updateCart();
     checkoutForm.reset();
     locationSelect.value = "";
-    
-    // Возвращаем в дефолтное состояние (наличные)
     paymentSelect.value = "cash";
     paypalButtonContainer.style.display = 'none';
     mainConfirmBtn.style.display = 'block';
-    
     document.body.style.overflow = 'auto';
     cartModal.style.display = 'none';
 }
 
-// Обработка формы (Terminal / Cash)
 checkoutForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!locationSelect.value) return alert('Please select delivery area!');
     
     const method = paymentSelect.value;
-    if (method === 'online') return; // PayPal кнопки имеют свою логику и onApprove
+    if (method === 'online') return;
 
     const methodLabel = method === 'terminal' ? "Card Terminal on Delivery 💳" : "Cash on Delivery 💵";
     await sendOrderToTelegram(methodLabel, "NEW ORDER 🍱");
