@@ -5,15 +5,18 @@ const cartModal = document.getElementById('cart-modal');
 const closeCart = document.getElementById('close-cart');
 const cartItemsContainer = document.getElementById('cart-items-container');
 const cartTotalPriceElement = document.getElementById('cart-total-price');
+const subtotalElement = document.getElementById('cart-subtotal');
+const deliveryFeeElement = document.getElementById('display-delivery-fee');
+const deliveryHeaderCost = document.getElementById('delivery-cost');
+const locationSelect = document.getElementById('location-select');
 const checkoutForm = document.querySelector('.checkout-form');
 
-// 1. Add to cart logic
+// 1. Логика добавления в корзину
 document.querySelectorAll('.add-to-cart').forEach(button => {
     button.addEventListener('click', () => {
         const name = button.getAttribute('data-name');
         const price = parseFloat(button.getAttribute('data-price'));
         
-        // Check if item already exists to increment quantity
         const existingItem = cart.find(item => item.name === name);
         if (existingItem) {
             existingItem.quantity += 1;
@@ -23,7 +26,7 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
         
         updateCart();
 
-        // Visual feedback on the button
+        // Визуальная обратная связь на кнопке
         const originalText = button.innerText;
         button.innerText = 'Added!';
         button.style.backgroundColor = '#27ae60';
@@ -37,7 +40,7 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
     });
 });
 
-// 2. Change quantity logic (+ / -)
+// 2. Логика изменения количества (+ / -)
 window.changeQuantity = function(name, delta) {
     const item = cart.find(i => i.name === name);
     if (item) {
@@ -49,9 +52,32 @@ window.changeQuantity = function(name, delta) {
     }
 };
 
-// 3. Update UI
+// 3. Расчет итоговых сумм (корзина + доставка)
+function calculateTotal() {
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const deliveryFee = parseFloat(locationSelect.value) || 0;
+    const total = subtotal + deliveryFee;
+
+    // Обновляем значения в модальном окне
+    if (subtotalElement) subtotalElement.innerText = `£${subtotal.toFixed(2)}`;
+    if (deliveryFeeElement) deliveryFeeElement.innerText = `£${deliveryFee.toFixed(2)}`;
+    if (cartTotalPriceElement) cartTotalPriceElement.innerText = `£${total.toFixed(2)}`;
+    
+    // Обновляем плашку доставки вверху модалки
+    if (deliveryFee > 0) {
+        deliveryHeaderCost.innerText = `£${deliveryFee.toFixed(2)}`;
+    } else {
+        deliveryHeaderCost.innerText = "Select area";
+    }
+}
+
+// Слушатель изменения выбора локации
+if (locationSelect) {
+    locationSelect.addEventListener('change', calculateTotal);
+}
+
+// 4. Обновление интерфейса корзины
 function updateCart() {
-    // Update total count on the floating badge
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartCountElement.innerText = totalItems;
     
@@ -59,10 +85,10 @@ function updateCart() {
         cartButton.classList.remove('empty');
     } else {
         cartButton.classList.add('empty');
-        cartModal.style.display = 'none'; // Close modal if last item removed
+        cartModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
     }
 
-    // Render items in the modal
     cartItemsContainer.innerHTML = cart.map((item) => `
         <div class="cart-item">
             <div class="item-info">
@@ -77,22 +103,20 @@ function updateCart() {
         </div>
     `).join('');
 
-    // Update total price
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    cartTotalPriceElement.innerText = `£${total.toFixed(2)}`;
+    calculateTotal();
 }
 
-// 4. Modal Controls
+// 5. Управление модальным окном
 cartButton.addEventListener('click', () => {
     if (cart.length > 0) {
         cartModal.style.display = 'block';
-        document.body.style.overflow = 'hidden'; // Prevent scroll
+        document.body.style.overflow = 'hidden';
     }
 });
 
 closeCart.addEventListener('click', () => {
     cartModal.style.display = 'none';
-    document.body.style.overflow = 'auto'; // Restore scroll
+    document.body.style.overflow = 'auto';
 });
 
 window.onclick = (event) => { 
@@ -102,20 +126,25 @@ window.onclick = (event) => {
     }
 };
 
-// 5. Form Submission
+// 6. Отправка формы
 checkoutForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
-    // Collect sauce data if needed
+    if (!locationSelect.value) {
+        alert('Please select a delivery area');
+        return;
+    }
+    
     const selectedSauces = Array.from(document.querySelectorAll('.sauce-chip input:checked'))
         .map(input => input.parentElement.innerText.trim());
 
     alert('Thank you for your order! We will contact you shortly.');
     
-    // Reset cart and UI
+    // Сброс корзины и UI
     cart = [];
     updateCart();
     cartModal.style.display = 'none';
     document.body.style.overflow = 'auto';
     checkoutForm.reset();
+    if (locationSelect) locationSelect.value = "";
 });
