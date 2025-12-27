@@ -180,13 +180,32 @@ button.add-to-cart:hover { background: #000; }
     box-sizing: border-box;
 }
 
-.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.modal-header { 
+    display: flex; 
+    flex-direction: row-reverse; /* Header right, back left */
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 25px; 
+}
 .modal-header h2 { margin: 0; font-size: 1.6rem; font-weight: 900; }
 
-.close-btn { 
-    border: none; background: #f0f0f0; width: 35px; height: 35px; 
-    border-radius: 50%; cursor: pointer; font-size: 1.2rem; font-weight: bold;
+/* Back Button Styling */
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #f0f0f0;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--dark-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
+.back-btn:hover { background: #e0e0e0; }
+.back-btn svg { width: 20px; height: 20px; }
 
 /* Delivery Info Bar */
 .cart-delivery-info {
@@ -245,7 +264,7 @@ button.add-to-cart:hover { background: #000; }
 }
 .sauce-chip:has(input:checked) { background: var(--dark-color); color: white; }
 
-/* --- LOCATION SELECT --- */
+/* --- LOCATION SELECT (FIXED FOR IPHONE) --- */
 .select-wrapper {
     position: relative;
     margin-bottom: 12px;
@@ -259,12 +278,12 @@ button.add-to-cart:hover { background: #000; }
     border: 2px solid #f0f0f0;
     background-color: #f8f9fa;
     
-    /* Сброс системных стилей Safari/Chrome */
+    /* Reset Safari/Chrome appearance */
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     
-    font-size: 16px; /* 16px предотвращает автозум на iPhone */
+    font-size: 16px; /* Prevents auto-zoom on iPhone */
     font-family: inherit;
     cursor: pointer;
     color: var(--dark-color);
@@ -317,7 +336,7 @@ button.add-to-cart:hover { background: #000; }
     border: 2px solid #f0f0f0; 
     background: #f8f9fa; 
     box-sizing: border-box; 
-    font-size: 16px; /* 16px предотвращает автозум на iPhone */
+    font-size: 16px; /* Prevents auto-zoom on iPhone */
     font-family: inherit; 
     transition: 0.3s;
 }
@@ -340,9 +359,7 @@ button.add-to-cart:hover { background: #000; }
 @media (max-width: 480px) {
     .container { padding: 0 15px; }
     
-    .cart-modal { 
-        padding: 0; 
-    }
+    .cart-modal { padding: 0; }
     
     .modal-content { 
         margin: 0; 
@@ -354,7 +371,10 @@ button.add-to-cart:hover { background: #000; }
 
     .address-row { grid-template-columns: 1fr; }
     
-    .cart-delivery-info {
-        grid-template-columns: 1fr;
+    .cart-delivery-info { grid-template-columns: 1fr; }
+
+    .back-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
     }
 }
