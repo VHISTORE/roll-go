@@ -37,7 +37,6 @@ async function sendOrderToTelegram(paymentMethod, status = "NEW ORDER 🍣") {
     const sauces = Array.from(document.querySelectorAll('.sauce-chip input:checked'))
         .map(i => i.parentElement.innerText.trim()).join(', ');
 
-    // Формируем текст сообщения
     let message = `*${status}*\n\n`;
     message += `👤 *Customer:* ${name}\n`;
     message += `📞 *Phone:* ${phone}\n`;
@@ -66,11 +65,21 @@ async function sendOrderToTelegram(paymentMethod, status = "NEW ORDER 🍣") {
 /**
  * 2. PAYPAL / APPLE PAY
  */
-function initPayPalButtons() {
+async function initPayPalButtons() {
     if (paypalButtonContainer.innerHTML !== "") return;
 
+    // Проверяем, поддерживает ли устройство Apple Pay
+    const applePayConfig = await paypal.Applepay().config();
+    const isApplePayAllowed = applePayConfig.isEligible;
+
     paypal.Buttons({
-        style: { layout: 'vertical', color: 'black', shape: 'rect', label: 'pay' },
+        style: { 
+            layout: 'vertical', 
+            color: 'black', 
+            shape: 'rect', 
+            label: 'pay' 
+        },
+        // Если Apple Pay доступен, PayPal сам предложит его первым в списке Buttons
         createOrder: (data, actions) => {
             const total = cartTotalPriceElement.innerText.replace('£', '');
             return actions.order.create({
@@ -79,7 +88,7 @@ function initPayPalButtons() {
         },
         onApprove: (data, actions) => {
             return actions.order.capture().then(async details => {
-                await sendOrderToTelegram("Paid Online (Apple Pay/PayPal) ✅", "PAID ORDER 💳");
+                await sendOrderToTelegram("Paid Online (PayPal/Apple Pay) ✅", "PAID ORDER 💳");
                 alert('Success! Order paid and sent to the kitchen.');
                 resetFullState();
             });
