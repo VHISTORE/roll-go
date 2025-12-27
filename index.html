@@ -25,6 +25,7 @@
     <main class="container">
         <h2 class="section-title">Premium Rolls</h2>
         <div class="menu-grid">
+            
             <div class="product-card">
                 <div class="badge hot">HOT</div>
                 <div class="pcs-badge">8 pcs</div>
@@ -350,31 +351,22 @@
                     <h3>Payment Method</h3>
                     <div class="select-wrapper">
                         <select id="payment-method-select" required>
-                            <option value="online" selected>Online Payment (Apple Pay / PayPal)</option>
+                            <option value="cash" selected>Cash on Delivery</option>
                             <option value="terminal">Card Terminal on Delivery</option>
-                            <option value="cash">Cash on Delivery</option>
+                            <option value="online">Online Payment (Apple Pay / PayPal)</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="summary-section">
-                    <div class="total-row subtotal">
-                        <span>Subtotal:</span>
-                        <span id="cart-subtotal">£0.00</span>
-                    </div>
-                    <div class="total-row delivery">
-                        <span>Delivery Fee:</span>
-                        <span id="display-delivery-fee">£0.00</span>
-                    </div>
-                    <div class="total-row final">
-                        <span>Total:</span>
-                        <span id="cart-total-price">£0.00</span>
-                    </div>
+                    <div class="total-row subtotal"><span>Subtotal:</span><span id="cart-subtotal">£0.00</span></div>
+                    <div class="total-row delivery"><span>Delivery Fee:</span><span id="display-delivery-fee">£0.00</span></div>
+                    <div class="total-row final"><span>Total:</span><span id="cart-total-price">£0.00</span></div>
                 </div>
 
-                <div id="paypal-button-container" style="margin-top: 20px;"></div>
+                <div id="paypal-button-container" style="margin-top: 20px; display: none;"></div>
 
-                <button type="submit" class="order-btn" id="main-confirm-btn" style="display: none;">Confirm Order</button>
+                <button type="submit" class="order-btn" id="main-confirm-btn">Confirm Order</button>
             </form>
         </div>
     </div>
@@ -396,9 +388,7 @@
                 <p class="closed-status">Monday: CLOSED</p>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 ROLL & GO. All rights reserved.</p>
-        </div>
+        <div class="footer-bottom"><p>&copy; 2025 ROLL & GO. All rights reserved.</p></div>
     </footer>
 
     <div class="floating-cart empty" id="cart-button">
