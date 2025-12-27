@@ -163,8 +163,8 @@ button.add-to-cart:hover { background: #000; }
     background: rgba(0,0,0,0.6); 
     backdrop-filter: blur(8px); 
     z-index: 3000;
-    padding: 10px; /* Отступ от краев экрана на мобильных */
-    box-sizing: border-box; /* Важно: заставляет padding учитываться внутри 100% ширины */
+    padding: 10px; 
+    box-sizing: border-box; 
     overflow-y: auto;
 }
 
@@ -177,7 +177,7 @@ button.add-to-cart:hover { background: #000; }
     padding: 25px;
     position: relative;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    box-sizing: border-box; /* Гарантирует, что модалка не "вылетит" по ширине */
+    box-sizing: border-box;
 }
 
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -204,7 +204,7 @@ button.add-to-cart:hover { background: #000; }
     display: flex; 
     align-items: center; 
     gap: 8px;
-    min-width: 0; /* Фикс для предотвращения растягивания контентом */
+    min-width: 0;
 }
 
 .info-item .icon { font-size: 1.2rem; }
@@ -245,6 +245,44 @@ button.add-to-cart:hover { background: #000; }
 }
 .sauce-chip:has(input:checked) { background: var(--dark-color); color: white; }
 
+/* --- LOCATION SELECT --- */
+.select-wrapper {
+    position: relative;
+    margin-bottom: 12px;
+    width: 100%;
+}
+
+#location-select {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: 2px solid #f0f0f0;
+    background-color: #f8f9fa;
+    
+    /* Сброс системных стилей Safari/Chrome */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    
+    font-size: 16px; /* 16px предотвращает автозум на iPhone */
+    font-family: inherit;
+    cursor: pointer;
+    color: var(--dark-color);
+    box-sizing: border-box;
+    outline: none;
+}
+
+.select-wrapper::after {
+    content: '▼';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    pointer-events: none;
+    color: var(--text-muted);
+}
+
 /* --- SUMMARY SECTION --- */
 .summary-section {
     background: #f8f9fa;
@@ -271,14 +309,15 @@ button.add-to-cart:hover { background: #000; }
 /* --- CHECKOUT FORM --- */
 .checkout-form h3 { margin: 20px 0 12px; font-size: 1rem; }
 
-.checkout-form input, .select-wrapper select {
+.checkout-form input {
     width: 100%; 
     padding: 14px; 
     margin-bottom: 12px; 
     border-radius: 14px;
     border: 2px solid #f0f0f0; 
     background: #f8f9fa; 
-    box-sizing: border-box; /* Все инпуты теперь строго внутри границ */
+    box-sizing: border-box; 
+    font-size: 16px; /* 16px предотвращает автозум на iPhone */
     font-family: inherit; 
     transition: 0.3s;
 }
@@ -295,8 +334,6 @@ button.add-to-cart:hover { background: #000; }
 .main-footer { background-color: var(--white); padding: 50px 0 0; border-top: 1px solid rgba(0,0,0,0.05); margin-top: 50px; }
 .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 40px; }
 .footer-link { display: flex; align-items: center; margin-bottom: 10px; text-decoration: none !important; color: var(--dark-color) !important; font-size: 0.95rem; }
-.footer-link.mail::before { content: "✉"; margin-right: 10px; font-size: 1.1rem; }
-.footer-link.phone::before { content: "📞"; margin-right: 10px; font-size: 1rem; }
 .footer-bottom { background: #f8f9fa; padding: 20px 0; text-align: center; border-top: 1px solid #eee; }
 
 /* --- RESPONSIVE FIXES --- */
@@ -304,13 +341,13 @@ button.add-to-cart:hover { background: #000; }
     .container { padding: 0 15px; }
     
     .cart-modal { 
-        padding: 0; /* Полноэкранный режим на очень маленьких экранах */
+        padding: 0; 
     }
     
     .modal-content { 
         margin: 0; 
         width: 100%; 
-        min-height: 100vh; /* Растягиваем на весь экран */
+        min-height: 100vh; 
         border-radius: 0; 
         padding: 20px 15px;
     }
@@ -318,11 +355,6 @@ button.add-to-cart:hover { background: #000; }
     .address-row { grid-template-columns: 1fr; }
     
     .cart-delivery-info {
-        grid-template-columns: 1fr; /* Колонки доставки одна под другой на телефонах */
-    }
-    
-    .item-controls {
-        gap: 6px;
-        padding: 4px 6px;
+        grid-template-columns: 1fr;
     }
 }
