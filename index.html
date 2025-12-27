@@ -293,13 +293,12 @@
                     <span class="icon">🚚</span>
                     <div>
                         <p class="label">Fee</p>
-                        <p class="value" id="delivery-cost">Calculated later</p>
+                        <p class="value" id="delivery-cost">Select area</p>
                     </div>
                 </div>
             </div>
 
-            <div id="cart-items-container" class="items-list">
-                </div>
+            <div id="cart-items-container" class="items-list"></div>
 
             <div class="sauces-section">
                 <h3>Free Sauces</h3>
@@ -311,25 +310,50 @@
                 </div>
             </div>
 
-            <div class="summary-section">
-                <div class="total-row">
-                    <span>Subtotal</span>
-                    <span id="cart-total-price">£0.00</span>
-                </div>
-            </div>
-
             <form class="checkout-form">
                 <h3>Delivery Details</h3>
-                <div class="input-group">
-                    <input type="text" placeholder="Full Name" required>
-                    <input type="tel" placeholder="Phone Number" required>
+                <input type="text" placeholder="Name" required>
+                <input type="tel" placeholder="Phone Number" required>
+                
+                <div class="select-wrapper">
+                    <select id="location-select" required>
+                        <option value="" disabled selected>Select delivery area</option>
+                        <option value="3.00">Salcombe — £3.00</option>
+                        <option value="5.00">West Charleton — £5.00</option>
+                        <option value="4.00">Malborough — £4.00</option>
+                        <option value="7.50">Chilington — £7.50</option>
+                        <option value="6.00">Thurlestone — £6.00</option>
+                        <option value="6.00">Hope Cove — £6.00</option>
+                        <option value="6.50">South Milton — £6.50</option>
+                        <option value="5.90">Kingsbridge — £5.90</option>
+                        <option value="5.90">West Alvington — £5.90</option>
+                        <option value="7.00">Stokenham — £7.00</option>
+                        <option value="9.00">Slapton — £9.00</option>
+                        <option value="11.00">Torcross — £11.00</option>
+                    </select>
                 </div>
-                <input type="text" placeholder="Post Code" required>
+
                 <div class="address-row">
-                    <input type="text" placeholder="Street" required>
-                    <input type="text" placeholder="Flat / House No." required>
+                    <input type="text" placeholder="House / Flat No." required>
+                    <input type="text" placeholder="Post Code" required>
                 </div>
-                <button type="submit" class="order-btn">Confirm & Pay</button>
+
+                <div class="summary-section">
+                    <div class="total-row subtotal">
+                        <span>Subtotal:</span>
+                        <span id="cart-subtotal">£0.00</span>
+                    </div>
+                    <div class="total-row delivery">
+                        <span>Delivery Fee:</span>
+                        <span id="display-delivery-fee">£0.00</span>
+                    </div>
+                    <div class="total-row final">
+                        <span>Total:</span>
+                        <span id="cart-total-price">£0.00</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="order-btn">Confirm Order</button>
             </form>
         </div>
     </div>
