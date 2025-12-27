@@ -1,9 +1,9 @@
 let cart = [];
 let personCount = 1;
+const MIN_ORDER_AMOUNT = 15.00; // Минимальная сумма заказа
 
 // --- ТВОИ ДАННЫЕ TELEGRAM ---
 const TG_TOKEN = "8435173530:AAHQIA-MQRwAvuS9RFzMb1UZPFTpJF6fvMM"; 
-// Список получателей (Массив ID)
 const TG_CHAT_IDS = ["5776210499", "5512197362", "1979575911"]; 
 
 // Элементы интерфейса
@@ -29,7 +29,7 @@ paypalButtonContainer.style.display = 'none';
 mainConfirmBtn.style.display = 'block';
 
 /**
- * 1. ОТПРАВКА В TELEGRAM (ОБНОВЛЕНО ДЛЯ 3-х ПОЛУЧАТЕЛЕЙ)
+ * 1. ОТПРАВКА В TELEGRAM (ДЛЯ 3-х ПОЛУЧАТЕЛЕЙ)
  */
 async function sendOrderToTelegram(paymentMethod, status = "NEW ORDER 🍣") {
     const name = checkoutForm.querySelector('input[placeholder="Name"]').value;
@@ -50,7 +50,6 @@ async function sendOrderToTelegram(paymentMethod, status = "NEW ORDER 🍣") {
     message += `💳 *Method:* ${paymentMethod}\n`;
     message += `💰 *TOTAL:* ${cartTotalPriceElement.innerText}`;
 
-    // Цикл для отправки каждому пользователю из списка
     for (const chatId of TG_CHAT_IDS) {
         try {
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
@@ -189,6 +188,37 @@ function calculateTotal() {
     
     if (deliveryHeaderCost) {
         deliveryHeaderCost.innerText = deliveryFee > 0 ? `£${deliveryFee.toFixed(2)}` : "Select area";
+    }
+
+    // --- ПРОВЕРКА МИНИМАЛЬНОЙ СУММЫ ---
+    let minOrderWarning = document.getElementById('min-order-warning');
+    if (subtotal < MIN_ORDER_AMOUNT) {
+        if (!minOrderWarning) {
+            minOrderWarning = document.createElement('div');
+            minOrderWarning.id = 'min-order-warning';
+            minOrderWarning.style.color = '#e84118';
+            minOrderWarning.style.fontWeight = 'bold';
+            minOrderWarning.style.textAlign = 'center';
+            minOrderWarning.style.padding = '10px';
+            minOrderWarning.style.background = '#ffe9e9';
+            minOrderWarning.style.borderRadius = '12px';
+            minOrderWarning.style.marginBottom = '15px';
+            checkoutForm.prepend(minOrderWarning);
+        }
+        minOrderWarning.innerText = `Min. order amount is £${MIN_ORDER_AMOUNT.toFixed(2)}. Add £${(MIN_ORDER_AMOUNT - subtotal).toFixed(2)} more.`;
+        
+        // Блокируем кнопки
+        mainConfirmBtn.disabled = true;
+        mainConfirmBtn.style.opacity = '0.5';
+        paypalButtonContainer.style.pointerEvents = 'none';
+        paypalButtonContainer.style.opacity = '0.5';
+    } else {
+        if (minOrderWarning) minOrderWarning.remove();
+        // Разблокируем кнопки
+        mainConfirmBtn.disabled = false;
+        mainConfirmBtn.style.opacity = '1';
+        paypalButtonContainer.style.pointerEvents = 'all';
+        paypalButtonContainer.style.opacity = '1';
     }
 }
 
