@@ -231,25 +231,48 @@ button.add-to-cart:hover { background: #000; transform: scale(1.05); }
 .person-selector #person-count { font-weight: 800; font-size: 1.1rem; min-width: 20px; text-align: center; }
 .utensils-label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
 
-/* Location select */
-.select-wrapper { position: relative; margin-bottom: 12px; }
-#location-select {
-    width: 100%; padding: 14px; border-radius: 14px; border: 2px solid #f0f0f0;
-    background-color: #f8f9fa; -webkit-appearance: none; appearance: none;
-    font-size: 16px; font-family: inherit; cursor: pointer; box-sizing: border-box;
+/* --- SELECT STYLES (Location & Payment) --- */
+.select-wrapper { 
+    position: relative; 
+    margin-bottom: 15px; 
 }
-.select-wrapper::after { content: '▼'; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 10px; pointer-events: none; color: var(--text-muted); }
 
-/* Payment methods */
-.payment-section { margin: 15px 0 25px; }
-.payment-options { display: flex; gap: 10px; }
-.payment-chip { flex: 1; cursor: pointer; }
-.payment-chip input { display: none; }
-.payment-chip span {
-    display: block; text-align: center; padding: 12px 5px; background: #f0f0f0;
-    border-radius: 14px; font-size: 0.85rem; font-weight: 600; border: 2px solid transparent;
+#location-select, #payment-method-select {
+    width: 100%; 
+    padding: 14px; 
+    border-radius: 14px; 
+    border: 2px solid #f0f0f0;
+    background-color: #f8f9fa; 
+    -webkit-appearance: none; 
+    appearance: none;
+    font-size: 16px; 
+    font-family: inherit; 
+    cursor: pointer; 
+    box-sizing: border-box;
+    font-weight: 600;
+    color: var(--dark-color);
+    transition: border-color 0.3s ease;
 }
-.payment-chip input:checked + span { background: var(--dark-color); color: white; }
+
+#location-select:focus, #payment-method-select:focus {
+    border-color: var(--dark-color);
+    outline: none;
+}
+
+.select-wrapper::after { 
+    content: '▼'; 
+    position: absolute; 
+    right: 15px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    font-size: 10px; 
+    pointer-events: none; 
+    color: var(--text-muted); 
+}
+
+/* Payment Section specific spacing */
+.payment-section { margin: 20px 0; }
+.payment-section h3 { font-size: 1rem; margin-bottom: 12px; }
 
 /* PAYPAL / APPLE PAY CONTAINER */
 #paypal-button-container {
@@ -293,7 +316,7 @@ button.add-to-cart:hover { background: #000; transform: scale(1.05); }
 @media (max-width: 480px) {
     .cart-modal { padding: 0; }
     .modal-content { margin: 0; width: 100%; min-height: 100vh; border-radius: 0; padding: 20px 15px; }
-    .address-row, .payment-options { grid-template-columns: 1fr; flex-direction: column; }
+    .address-row { grid-template-columns: 1fr; }
     .cart-delivery-info { grid-template-columns: 1fr; }
     .back-btn { padding: 6px 12px; font-size: 0.8rem; }
 }
