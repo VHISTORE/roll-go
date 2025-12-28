@@ -224,6 +224,75 @@ button.add-to-cart:hover { background: #000; transform: scale(1.05); }
 .person-selector #person-count { font-weight: 800; font-size: 1.1rem; min-width: 20px; text-align: center; }
 .utensils-label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
 
+/* СТИЛИ ДЛЯ ВЫБОРА ВРЕМЕНИ ДОСТАВКИ */
+.delivery-time-section {
+    margin: 25px 0;
+    padding-top: 15px;
+    border-top: 1px solid #f1f1f1;
+}
+
+.delivery-time-section h3 {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.time-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.time-radio {
+    cursor: pointer;
+    position: relative;
+}
+
+.time-radio input {
+    position: absolute;
+    opacity: 0;
+}
+
+.time-radio span {
+    display: block;
+    padding: 14px 10px;
+    background: #f8f9fa;
+    border: 2px solid #f0f0f0;
+    border-radius: 14px;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+}
+
+.time-radio input:checked + span {
+    border-color: var(--dark-color);
+    background: var(--dark-color);
+    color: white;
+}
+
+#preorder-time {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: 2px solid #f0f0f0;
+    background-color: #f8f9fa;
+    font-size: 16px;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: all 0.3s ease;
+}
+
+#preorder-time:focus {
+    border-color: var(--dark-color);
+    outline: none;
+    background-color: white;
+}
+
+/* ОСТАЛЬНЫЕ СТИЛИ ФОРМЫ */
 .select-wrapper { 
     position: relative; 
     margin-bottom: 15px; 
