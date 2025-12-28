@@ -8,6 +8,7 @@
     --shadow: 0 10px 25px rgba(0,0,0,0.03);
     --radius-lg: 28px;
     --radius-md: 16px;
+    --radius-sm: 12px;
 }
 
 body {
@@ -224,26 +225,34 @@ button.add-to-cart:hover { background: #000; transform: scale(1.05); }
 .person-selector #person-count { font-weight: 800; font-size: 1.1rem; min-width: 20px; text-align: center; }
 .utensils-label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
 
-/* СТИЛИ ДЛЯ ВЫБОРА ВРЕМЕНИ ДОСТАВКИ */
+/* УЛУЧШЕННЫЕ СТИЛИ ВЫБОРА ВРЕМЕНИ */
 .delivery-time-section {
     margin: 25px 0;
-    padding-top: 15px;
-    border-top: 1px solid #f1f1f1;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid rgba(0,0,0,0.03);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
 }
 
 .delivery-time-section h3 {
-    font-size: 1rem;
-    margin-bottom: 15px;
-    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 18px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    color: var(--dark-color);
 }
 
 .time-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    display: flex;
+    background: #f1f2f6;
+    padding: 4px;
+    border-radius: 14px;
+    gap: 4px;
 }
 
 .time-radio {
+    flex: 1;
     cursor: pointer;
     position: relative;
 }
@@ -251,45 +260,63 @@ button.add-to-cart:hover { background: #000; transform: scale(1.05); }
 .time-radio input {
     position: absolute;
     opacity: 0;
+    width: 0;
+    height: 0;
 }
 
+/* Эффект сегментированного переключателя */
 .time-radio span {
     display: block;
-    padding: 14px 10px;
-    background: #f8f9fa;
-    border: 2px solid #f0f0f0;
-    border-radius: 14px;
+    padding: 12px 5px;
+    border-radius: 11px;
     text-align: center;
     font-size: 0.85rem;
     font-weight: 700;
     color: var(--text-muted);
-    transition: all 0.3s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .time-radio input:checked + span {
-    border-color: var(--dark-color);
-    background: var(--dark-color);
-    color: white;
+    background: var(--white);
+    color: var(--dark-color);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    transform: scale(1.02);
 }
 
+/* Стиль выпадающего списка времени */
 #preorder-time {
     width: 100%;
-    padding: 14px;
+    margin-top: 15px;
+    padding: 15px;
     border-radius: 14px;
-    border: 2px solid #f0f0f0;
-    background-color: #f8f9fa;
-    font-size: 16px;
-    font-family: inherit;
+    border: 2px solid #f1f2f6;
+    background-color: #ffffff;
+    font-size: 1rem;
     font-weight: 700;
+    color: var(--dark-color);
     cursor: pointer;
-    margin-top: 12px;
     transition: all 0.3s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231e272e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 18px;
 }
 
 #preorder-time:focus {
     border-color: var(--dark-color);
+    box-shadow: 0 0 0 4px rgba(30, 39, 46, 0.05);
     outline: none;
-    background-color: white;
+}
+
+/* Анимация появления списка */
+#scheduled-time-wrapper {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* ОСТАЛЬНЫЕ СТИЛИ ФОРМЫ */
