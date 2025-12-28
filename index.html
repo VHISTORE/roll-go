@@ -357,6 +357,24 @@
                     <input type="text" placeholder="Post Code" required>
                 </div>
 
+                <div class="delivery-time-section">
+                    <h3>Delivery Time</h3>
+                    <div class="time-options">
+                        <label class="time-radio">
+                            <input type="radio" name="delivery-time-type" value="asap" checked>
+                            <span>ASAP (~40-60 min)</span>
+                        </label>
+                        <label class="time-radio">
+                            <input type="radio" name="delivery-time-type" value="scheduled">
+                            <span>Scheduled</span>
+                        </label>
+                    </div>
+                    <div id="scheduled-time-wrapper" class="select-wrapper" style="display: none; margin-top: 10px;">
+                        <select id="preorder-time">
+                            </select>
+                    </div>
+                </div>
+
                 <div class="payment-section">
                     <h3>Payment Method</h3>
                     <div class="select-wrapper">
